@@ -1,0 +1,8 @@
+# For the project to work, make sure to add a .env.prod and .env.dev to your project!
+# Scheme to use. Either http or https
+SCHEME={{S}}
+# Enter api url here, without scheme
+API_URL={{A}}
+
+# The {{LETTER}} is meant for CI/CD to automatically replace the placeholders.
+# Create a dotenv_dev and dotenv_prod from this example file and fill in the right values.
