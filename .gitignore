@@ -43,7 +43,6 @@ secrets.yml
 
 # Miscellaneous
 *.class
-*.lock
 *.log
 *.pyc
 *.swp
