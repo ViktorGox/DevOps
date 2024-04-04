@@ -1,2 +1,4 @@
 ./Dockerfile
 ./dockerignore
+./dart_tool
+./build
