@@ -1,13 +1,28 @@
-#!/bin/bash
+#TODO Make this variable in .env file
+BACKEND_ENDPOINT=http://192.168.178.101:8080/api/songs
+# Method to actually do the POST request
+parse_and_add_song() {
+    local line="$1"
+    local artist
+    local title
+    local year
+    local imageUrl
 
-# Parse the file playlistdata.edi with bash and add to the database by sending a POST HTTP request to the backend end point for adding songs.
-# Make sure the backend end point is configurable by using environment variables.
+    IFS='+' read -r _ artist title year imageUrl _ <<< "$(echo "$line" | cut -d '+' -f 1-)"
 
-# The json format in which your need to post the data has to look like this:
-# { 
-#     "artist": "Toto",
-#     "title": "Africa",
-#     "year": 1982,
-#     "cover": "https://i.scdn.co/image/ab67616d00001e024a052b99c042dc15f933145b",
-# }
+    echo "$artist + $title + $year + "'"$imageUrl"'""
 
+    curl -X POST -H "Content-Type: application/json" -d '{
+        "artist": "'"$artist"'",
+        "title": "'"$title"'",
+        "year": '"$year"',
+        "imageUrl": "'"$imageUrl"'"
+    }' "$BACKEND_ENDPOINT"
+}
+
+# This will read until the last line
+while IFS= read -r line || [[ -n "$line" ]]; do
+    if [[ "$line" != UNH* && "$line" != UNT* ]]; then
+        parse_and_add_song "$line"
+    fi
+done < "playlistdata.edi"
