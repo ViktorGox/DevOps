@@ -26,3 +26,5 @@ ChatGPT proposed to run `CMD ["flutter", "run", "-d", "web-server", "--web-hostn
 
 I tried running it with python3 and this time it worked. I just had to specify the directory otherwise it just hosts the work dir folder.
 `CMD ["python3", "-m", "http.server", "8080", "--directory", "build/web"]`
+
+After Bobby attempted the script on his laptop, and it failed. There was an additional file which was created in the lib/models folder which was created previously on my laptop and was not in the dockerignore, so it was copied over. Now the Dockerfile also runs the command ```flutter pub run build_runner build``` to generate that.
