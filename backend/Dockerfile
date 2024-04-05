@@ -3,21 +3,19 @@ FROM gradle:jdk17
 # Set the working directory inside the container
 WORKDIR /app
 
+ENV DOCKER_ENV=true
 
 # Copy the Gradle configuration files
-COPY build.gradle .
-COPY settings.gradle .
-COPY gradle/ gradle/
-
-# Copy the .env file and set the environment variable
-COPY .env /app
-ENV DOCKER_ENV=true
-ENV DB_HOST=192.168.100.1
-ENV DB_USER=root
-ENV DB_PASSWORD=password
+COPY backend/build.gradle .
+COPY backend/settings.gradle .
+COPY backend/gradle/ gradle/
 
 # Copy the application source code
-COPY src/ src/
+COPY backend/src/ src/
+
+#Copy the seed script
+COPY ./seed-application/add_tracks.sh ./seed-application
+
 
 # Build the application using Gradle
 RUN gradle build
