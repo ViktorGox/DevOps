@@ -2,3 +2,4 @@
 ./dockerignore
 ./dart_tool
 ./build
+./models/song.d.dart
