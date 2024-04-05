@@ -19,7 +19,7 @@ build_web_frontend_dev:
       - build/web/
   only:
     - ci-cd-yml-file-for-frontend
-    -
+
 build_web_frontend_prod:
   stage: build_web
   script:
