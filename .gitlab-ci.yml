@@ -27,9 +27,15 @@ build_web_frontend_dev:
   script:
     - flutter pub run build_runner build
     - flutter build web -t lib/main_dev.dart
+    - echo "sending ."
+    - ls -l .
+    - echo "sending ./build"
+    - ls -l ./build
+    - echo "sending ./build/web"
+    - ls -l ./build/web
   artifacts:
     paths:
-      - ./build/web/
+      - frontend/build/web/**
   only:
     - ci-cd-yml-file-for-frontend
 
@@ -40,7 +46,7 @@ build_web_frontend_prod:
     - flutter build web -t lib/main_prod.dart
   artifacts:
     paths:
-      - ../build/web/
+      - ../build/web/**
   only:
     - ci-cd-yml-file-for-frontend
 
