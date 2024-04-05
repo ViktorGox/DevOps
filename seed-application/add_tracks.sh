@@ -1,5 +1,5 @@
 #TODO Make this variable in .env file
-BACKEND_ENDPOINT=http://192.168.178.101:8080/api/songs
+BACKEND_ENDPOINT=http://$BACKEND:8080/api/songs
 # Method to actually do the POST request
 parse_and_add_song() {
     local line="$1"
