@@ -12,6 +12,9 @@ COPY gradle/ gradle/
 # Copy the .env file and set the environment variable
 COPY .env /app
 ENV DOCKER_ENV=true
+ENV DB_HOST=192.168.100.1
+ENV DB_USER=root
+ENV DB_PASSWORD=password
 
 # Copy the application source code
 COPY src/ src/
