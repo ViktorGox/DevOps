@@ -1,10 +1,13 @@
-FROM mariadb:lts-jammy
+FROM scratch
 
-# Set environment variables
-ENV MYSQL_ROOT_PASSWORD=root_password
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=password
-ENV MYSQL_DATABASE=playlist
+# Set the working directory inside the container
+WORKDIR /app
 
-# Expose the default MySQL port
-EXPOSE 3306
+# Copy the script into the container
+COPY script.sh /app/script.sh
+
+# Make the script executable
+RUN chmod +x /app/script.sh
+
+# Define the command to execute when the container starts
+CMD ["/bin/sh", "-c", "/app/script.sh"]
