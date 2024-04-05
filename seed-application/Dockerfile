@@ -1,13 +1,17 @@
-FROM scratch
+FROM ubuntu:latest
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the script into the container
-COPY script.sh /app/script.sh
+# Install curl
+RUN apt-get update && apt-get install -y curl
+
+# Copy the script and data file into the container
+COPY add_tracks.sh ./add_tracks.sh
+COPY playlistdata.edi ./playlistdata.edi
 
 # Make the script executable
-RUN chmod +x /app/script.sh
+RUN chmod +x ./add_tracks.sh
 
 # Define the command to execute when the container starts
-CMD ["/bin/sh", "-c", "/app/script.sh"]
+CMD ["/bin/bash", "-c", "/app/add_tracks.sh"]
