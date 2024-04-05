@@ -1,4 +1,4 @@
-## Assignment 2 - BI-2
+## Assignment 2 - BI-2 Dockerfile for frontend.
 
 First iteration of the Dockerfile was
 
@@ -28,3 +28,7 @@ I tried running it with python3 and this time it worked. I just had to specify t
 `CMD ["python3", "-m", "http.server", "8080", "--directory", "build/web"]`
 
 After Bobby attempted the script on his laptop, and it failed. There was an additional file which was created in the lib/models folder which was created previously on my laptop and was not in the dockerignore, so it was copied over. Now the Dockerfile also runs the command ```flutter pub run build_runner build``` to generate that.
+
+## Assignment 3 - BI-7 CI/CD .yml file front end
+
+After some trial and error, I realized that I can just copy the code from the already existing Dockerfile for the front end. Then to get the env files I created variables in gitlab Settings -> CI/CD and used them to copy and paste as contents for the env files. Then had some issues with getting the builds to be set as artifacts, but after some tinkering with the path I got it working. 
