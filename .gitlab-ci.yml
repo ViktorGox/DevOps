@@ -1,6 +1,9 @@
 default:
   image: ghcr.io/cirruslabs/flutter
 
+before_script:
+  - cd frontend
+
 stages:
   - build_web
   - build_android
