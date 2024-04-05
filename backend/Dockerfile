@@ -13,10 +13,6 @@ COPY backend/gradle/ gradle/
 # Copy the application source code
 COPY backend/src/ src/
 
-#Copy the seed script
-COPY ./seed-application/add_tracks.sh ./seed-application
-
-
 # Build the application using Gradle
 RUN gradle build
 
