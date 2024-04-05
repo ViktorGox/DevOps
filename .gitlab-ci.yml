@@ -14,11 +14,12 @@ setup_env_files:
   script:
     - echo "$DOTENV_DEV" > dotenv_dev
     - echo "$DOTENV_PROD" > dotenv_prod
+  only:
+    - ci-cd-yml-file-for-frontend
 
 build_web_frontend_dev:
   stage: build_web
   script:
-    - flutter pub get
     - flutter pub run build_runner build
     - flutter build web -t lib/main_dev.dart
   artifacts:
@@ -30,7 +31,6 @@ build_web_frontend_dev:
 build_web_frontend_prod:
   stage: build_web
   script:
-    - flutter pub get
     - flutter pub run build_runner build
     - flutter build web -t lib/main_prod.dart
   artifacts:
@@ -42,7 +42,6 @@ build_web_frontend_prod:
 build_android_app_dev:
   stage: build_android
   script:
-    - flutter pub get
     - flutter pub run build_runner build
     - flutter build apk -t lib/main_dev.dart
   artifacts:
@@ -54,7 +53,6 @@ build_android_app_dev:
 build_android_app_prod:
   stage: build_android
   script:
-    - flutter pub get
     - flutter pub run build_runner build
     - flutter build apk -t lib/main_prod.dart
   artifacts:
