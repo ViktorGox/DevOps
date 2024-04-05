@@ -29,7 +29,7 @@ build_web_frontend_dev:
     - flutter build web -t lib/main_dev.dart
   artifacts:
     paths:
-      - build/web/
+      - ./build/web/
   only:
     - ci-cd-yml-file-for-frontend
 
@@ -40,7 +40,7 @@ build_web_frontend_prod:
     - flutter build web -t lib/main_prod.dart
   artifacts:
     paths:
-      - build/web/
+      - ../build/web/
   only:
     - ci-cd-yml-file-for-frontend
 
@@ -51,7 +51,7 @@ build_android_app_dev:
     - flutter build apk -t lib/main_dev.dart
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/
+      - ./build/app/outputs/flutter-apk/
   only:
     - ci-cd-yml-file-for-frontend
 
@@ -62,6 +62,6 @@ build_android_app_prod:
     - flutter build apk -t lib/main_prod.dart
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/
+      - ../build/app/outputs/flutter-apk/
   only:
     - ci-cd-yml-file-for-frontend
