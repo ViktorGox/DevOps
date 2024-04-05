@@ -1,24 +1,26 @@
-FROM scratch
+FROM gradle:jdk17
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy Gradle files
-COPY build.gradle settings.gradle /app/
-COPY gradle /app/gradle
 
-# Download Gradle wrapper
-RUN ./gradlew --version
+# Copy the Gradle configuration files
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradle/ gradle/
 
-# Copy application source
-COPY src /app/src
+# Copy the .env file and set the environment variable
+COPY .env /app
+ENV DOCKER_ENV=true
 
-# Copy .env file
-COPY .env /app/.env
+# Copy the application source code
+COPY src/ src/
 
-# Build application
-RUN ./gradlew --no-daemon clean build
+# Build the application using Gradle
+RUN gradle build
 
-# Expose the port your application runs on
+# Expose port
 EXPOSE 8080
 
 # Command to run the application
-CMD ["java", "-jar", "build/libs/your-application.jar"]
+ENTRYPOINT ["java", "-jar", "build/libs/playlist-0.0.1-SNAPSHOT.jar"]
