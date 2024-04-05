@@ -1,4 +1,31 @@
-version: '3.0'
+version: '3.8'
 
 services:
-  
+  backend:
+    environment:
+      DOCKER_ENV: true
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_HOST: database
+      BACKEND: localhost
+    build:
+      context: ./
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    command: bash -c "cd /app/seed-application && ./seed_script.sh"
+
+  database:
+    build: ./seed-application
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      interval: 10s
+      retries: 5
+      timeout: 5s
