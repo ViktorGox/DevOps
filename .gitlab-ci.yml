@@ -11,14 +11,13 @@ test_backend:
   services:
     - name: mariadb:lts-jammy
       alias: mariadb
-      environment:
-        MYSQL_ROOT_PASSWORD: root_password
+
   variables:
     DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
     DATABASE_USERNAME: root
     DATABASE_PASSWORD: root_password
   script:
-    - gradle test
+    - gradle build
   artifacts:
     paths:
       - backend/build/reports/tests/
