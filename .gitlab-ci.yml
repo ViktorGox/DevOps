@@ -18,6 +18,7 @@
       - frontend/dotenv_prod
 
 stages:
+  - setup
   - frontend
   - backend
 
@@ -47,7 +48,7 @@ build_backend:
 
 
 setup_env_files:
-  stage: frontend
+  stage: setup
   <<: *frontend_settings
   script:
     - cd frontend
