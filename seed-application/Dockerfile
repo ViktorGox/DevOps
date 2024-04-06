@@ -1,10 +1,20 @@
-FROM mariadb:lts-jammy
+FROM ubuntu:latest
 
-# Set environment variables
-ENV MYSQL_ROOT_PASSWORD=root_password
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=password
-ENV MYSQL_DATABASE=playlist
+# Set the working directory inside the container
+WORKDIR /app
 
-# Expose the default MySQL port
-EXPOSE 3306
+# Install curl
+RUN apt-get update && apt-get install -y curl dos2unix
+
+# Copy the script and data file into the container
+COPY add_tracks.sh ./add_tracks.sh
+COPY playlistdata.edi ./playlistdata.edi
+
+# Convert line separators to UNIX format
+RUN dos2unix ./add_tracks.sh
+
+# Make the script executable
+RUN chmod +x ./add_tracks.sh
+
+# Define the command to execute when the container starts
+CMD ["/bin/bash", "-c", "/app/add_tracks.sh"]

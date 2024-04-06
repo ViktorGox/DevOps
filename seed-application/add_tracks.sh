@@ -1,5 +1,4 @@
-#TODO Make this variable in .env file
-BACKEND_ENDPOINT=http://192.168.178.101:8080/api/songs
+BACKEND_ENDPOINT=http://$BACKEND:8080/api/songs
 # Method to actually do the POST request
 parse_and_add_song() {
     local line="$1"
@@ -8,10 +7,16 @@ parse_and_add_song() {
     local year
     local imageUrl
 
+    # Set IFS to '+' and read the input line into variables
     IFS='+' read -r _ artist title year imageUrl _ <<< "$(echo "$line" | cut -d '+' -f 1-)"
 
-    echo "$artist + $title + $year + "'"$imageUrl"'""
+    # Check if any of the required fields are missing or incomplete
+    if [ -z "$artist" ] || [ -z "$title" ] || [ -z "$year" ] || [ -z "$imageUrl" ]; then
+        echo "Skipping incomplete line: $line"
+        return 1
+    fi
 
+    # Make the POST request
     curl -X POST -H "Content-Type: application/json" -d '{
         "artist": "'"$artist"'",
         "title": "'"$title"'",
@@ -22,6 +27,7 @@ parse_and_add_song() {
 
 # This will read until the last line
 while IFS= read -r line || [[ -n "$line" ]]; do
+    # Exclude lines that start with UNH or UNT
     if [[ "$line" != UNH* && "$line" != UNT* ]]; then
         parse_and_add_song "$line"
     fi
