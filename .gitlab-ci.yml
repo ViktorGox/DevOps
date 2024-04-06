@@ -1,3 +1,13 @@
+.default_settings: &default_settings
+  services:
+    - name: mariadb:lts-jammy
+      alias: mariadb
+  variables:
+    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
+    DATABASE_USERNAME: root
+    DATABASE_PASSWORD: root_password
+    DOCKER_ENV: true
+
 before_script:
   - cd backend
 
@@ -8,14 +18,7 @@ stages:
 test_backend:
   stage: test
   image: gradle:jdk17
-  services:
-    - name: mariadb:lts-jammy
-      alias: mariadb
-  variables:
-    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
-    DATABASE_USERNAME: root
-    DATABASE_PASSWORD: root_password
-    DOCKER_ENV: true
+  <<: *default_settings
   script:
     - gradle test
     - gradle build
@@ -28,14 +31,7 @@ test_backend:
 build_backend:
   stage: build
   image: gradle:jdk17
-  services:
-    - name: mariadb:lts-jammy
-      alias: mariadb
-  variables:
-    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
-    DATABASE_USERNAME: root
-    DATABASE_PASSWORD: root_password
-    DOCKER_ENV: true
+  <<: *default_settings
   script:
     - gradle build
   artifacts:
