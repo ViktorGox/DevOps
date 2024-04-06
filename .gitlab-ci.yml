@@ -16,8 +16,9 @@ test_backend:
     DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
     DATABASE_USERNAME: root
     DATABASE_PASSWORD: root_password
+    DOCKER_ENV: true
   script:
-    - gradle build
+    - gradle test
   artifacts:
     paths:
       - backend/build/reports/tests/
