@@ -16,16 +16,32 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    command: bash -c "cd /app/seed-application && ./seed_script.sh"
-
-  database:
-    build: ./seed-application
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
     healthcheck:
-      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/songs" ]
       interval: 10s
       retries: 5
       timeout: 5s
+
+  database:
+     image: mariadb:lts-jammy
+     environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: playlist
+     ports:
+      - "3306:3306"
+     healthcheck:
+      test: [ "CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+  data_loader:
+    build: seed-application
+    environment:
+      BACKEND: backend
+    depends_on:
+      backend:
+        condition: service_healthy
+
+
