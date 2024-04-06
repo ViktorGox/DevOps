@@ -1,0 +1,68 @@
+default:
+  image: ghcr.io/cirruslabs/flutter
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - frontend/dotenv_dev
+      - frontend/dotenv_prod
+
+before_script:
+  - cd frontend
+
+stages:
+  - setup
+  - build_web
+  - build_android
+
+setup_env_files:
+  stage: setup
+  script:
+    - echo "$DOTENV_DEV" > dotenv_dev
+    - echo "$DOTENV_PROD" > dotenv_prod
+  only:
+    - ci-cd-yml-file-for-frontend
+
+build_web_frontend_dev:
+  stage: build_web
+  script:
+    - flutter pub run build_runner build
+    - flutter build web -t lib/main_dev.dart
+    - ls -l ./build/web
+  artifacts:
+    paths:
+      - frontend/build/web
+  only:
+    - ci-cd-yml-file-for-frontend
+
+build_web_frontend_prod:
+  stage: build_web
+  script:
+    - flutter pub run build_runner build
+    - flutter build web -t lib/main_prod.dart
+  artifacts:
+    paths:
+      - frontend/build/web
+  only:
+    - ci-cd-yml-file-for-frontend
+
+build_android_app_dev:
+  stage: build_android
+  script:
+    - flutter pub run build_runner build
+    - flutter build apk -t lib/main_dev.dart
+  artifacts:
+    paths:
+      - frontend/build/app/outputs/flutter-apk
+  only:
+    - ci-cd-yml-file-for-frontend
+
+build_android_app_prod:
+  stage: build_android
+  script:
+    - flutter pub run build_runner build
+    - flutter build apk -t lib/main_prod.dart
+  artifacts:
+    paths:
+      - frontend/build/app/outputs/flutter-apk
+  only:
+    - ci-cd-yml-file-for-frontend
