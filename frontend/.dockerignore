@@ -3,3 +3,5 @@
 ./dart_tool
 ./build
 ./models/song.d.dart
+./dotenv_prod
+./dotenv_dev
