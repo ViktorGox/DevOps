@@ -50,6 +50,7 @@ setup_env_files:
   stage: frontend
   <<: *frontend_settings
   script:
+    - cd frontend
     - echo "$DOTENV_DEV" > dotenv_dev
     - echo "$DOTENV_PROD" > dotenv_prod
   only:
@@ -59,6 +60,7 @@ build_web_frontend_dev:
   stage: frontend
   <<: *frontend_settings
   script:
+    - cd frontend
     - flutter pub run build_runner build
     - flutter build web -t lib/main_dev.dart
     - ls -l ./build/web
@@ -74,6 +76,7 @@ build_web_frontend_prod:
   stage: frontend
   <<: *frontend_settings
   script:
+    - cd frontend
     - flutter pub run build_runner build
     - flutter build web -t lib/main_prod.dart
   dependencies:
@@ -88,6 +91,7 @@ build_android_app_dev:
   stage: frontend
   <<: *frontend_settings
   script:
+    - cd frontend
     - flutter pub run build_runner build
     - flutter build apk -t lib/main_dev.dart
   dependencies:
@@ -102,6 +106,7 @@ build_android_app_prod:
   stage: frontend
   <<: *frontend_settings
   script:
+    - cd frontend
     - flutter pub run build_runner build
     - flutter build apk -t lib/main_prod.dart
   dependencies:
