@@ -69,3 +69,7 @@ Somehow didn't think of the fact that the `dotenv_prod` and `dotenv_dev` files n
 ## Assignment 2 - BI-9 Add front end to the docker compose.
 
 Used arguments to provide the front end Dockerfile with data for its env files.
+
+## Assignment 3 - BI-8 CI/CD .yml file for backend.
+
+This time the first thing done was look up the already existing Dockerfile for the backend. I first added the database service to both to see if it works, and it did. Then I looked at how I can group the set-up for the jobs and found the settings.
