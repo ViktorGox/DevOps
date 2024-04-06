@@ -65,7 +65,6 @@ build_web_frontend_dev:
     - cd frontend
     - flutter pub run build_runner build
     - flutter build web -t lib/main_dev.dart
-    - ls -l ./build/web
   artifacts:
     paths:
       - frontend/build/web
