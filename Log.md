@@ -64,4 +64,8 @@ After some trial and error, I realized that I can just copy the code from the al
 
 ## Assignment 2 - BI-2-1 Docker image for front end should self generate dotenv files.
 
-Somehow didn't think of the fact that the `dotenv_prod` and `dotenv_dev` files need to be generated manually. Now they are generated and the data is added to them. Currently, the data is inside the dockerfile, but will be moved into the docker-compose later.  
+Somehow didn't think of the fact that the `dotenv_prod` and `dotenv_dev` files need to be generated manually. Now they are generated and the data is added to them. Currently, the data is inside the dockerfile, but will be moved into the docker-compose later.
+
+## Assignment 2 - BI-9 Add front end to the docker compose.
+
+Used arguments to provide the front end Dockerfile with data for its env files.
