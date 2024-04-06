@@ -3,7 +3,6 @@ before_script:
 
 stages:
   - test
-  - build
 
 test_backend:
   stage: test
@@ -19,19 +18,10 @@ test_backend:
     DOCKER_ENV: true
   script:
     - gradle test
-  artifacts:
-    paths:
-      - backend/build/reports/tests/
-  only:
-    - ci-cd-yml-file-for-backend
-
-build_backend:
-  stage: build
-  image: gradle:jdk17
-  script:
     - gradle build
   artifacts:
     paths:
+      - backend/build/reports/tests/
       - backend/build/libs/*.jar
   only:
     - ci-cd-yml-file-for-backend
