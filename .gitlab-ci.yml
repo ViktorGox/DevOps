@@ -1,20 +1,37 @@
-stages:
-  - build
-  - test
+before_script:
+  - cd backend
 
-build_backend:
-  stage: build
-  script:
-    - docker-compose -f docker-compose.ci.yml build
-  artifacts:
-    paths:
-      - backend/build/libs/*.jar
-  only:
-    - ci-cd-yml-file-for-backend
+stages:
+  - test
+  - build
 
 test_backend:
   stage: test
+  image: gradle:jdk17
+  services:
+    - name: mariadb:lts-jammy
+      alias: mariadb
+      environment:
+        MYSQL_ROOT_PASSWORD: root_password
+  variables:
+    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
+    DATABASE_USERNAME: root
+    DATABASE_PASSWORD: root_password
   script:
-    - docker-compose -f docker-compose.ci.yml run backend-test
+    - gradle test
+  artifacts:
+    paths:
+      - backend/build/reports/tests/
+  only:
+    - ci-cd-yml-file-for-backend
+
+build_backend:
+  stage: build
+  image: gradle:jdk17
+  script:
+    - gradle build
+  artifacts:
+    paths:
+      - backend/build/libs/*.jar
   only:
     - ci-cd-yml-file-for-backend
