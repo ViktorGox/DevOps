@@ -66,8 +66,6 @@ build_web_frontend_dev:
     - flutter pub run build_runner build
     - flutter build web -t lib/main_dev.dart
     - ls -l ./build/web
-  dependencies:
-    - setup_env_files
   artifacts:
     paths:
       - frontend/build/web
@@ -81,8 +79,6 @@ build_web_frontend_prod:
     - cd frontend
     - flutter pub run build_runner build
     - flutter build web -t lib/main_prod.dart
-  dependencies:
-    - setup_env_files
   artifacts:
     paths:
       - frontend/build/web
@@ -96,8 +92,6 @@ build_android_app_dev:
     - cd frontend
     - flutter pub run build_runner build
     - flutter build apk -t lib/main_dev.dart
-  dependencies:
-    - setup_env_files
   artifacts:
     paths:
       - frontend/build/app/outputs/flutter-apk
@@ -111,8 +105,6 @@ build_android_app_prod:
     - cd frontend
     - flutter pub run build_runner build
     - flutter build apk -t lib/main_prod.dart
-  dependencies:
-    - setup_env_files
   artifacts:
     paths:
       - frontend/build/app/outputs/flutter-apk
