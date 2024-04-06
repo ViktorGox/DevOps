@@ -3,6 +3,7 @@ before_script:
 
 stages:
   - test
+  - build
 
 test_backend:
   stage: test
@@ -10,7 +11,6 @@ test_backend:
   services:
     - name: mariadb:lts-jammy
       alias: mariadb
-
   variables:
     DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
     DATABASE_USERNAME: root
@@ -22,6 +22,24 @@ test_backend:
   artifacts:
     paths:
       - backend/build/reports/tests/
+  only:
+    - ci-cd-yml-file-for-backend
+
+build_backend:
+  stage: build
+  image: gradle:jdk17
+  services:
+    - name: mariadb:lts-jammy
+      alias: mariadb
+  variables:
+    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
+    DATABASE_USERNAME: root
+    DATABASE_PASSWORD: root_password
+    DOCKER_ENV: true
+  script:
+    - gradle build
+  artifacts:
+    paths:
       - backend/build/libs/*.jar
   only:
     - ci-cd-yml-file-for-backend
