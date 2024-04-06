@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      args:
+        - SCHEME=http
+        - API_URL=localhost:8080
+    ports:
+      - "80:8080"
   backend:
     environment:
       DOCKER_ENV: true
@@ -21,7 +30,6 @@ services:
       interval: 10s
       retries: 5
       timeout: 5s
-
   database:
      image: mariadb:lts-jammy
      environment:
