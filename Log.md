@@ -61,3 +61,7 @@ with /bin/sh instead of bin/sh/bash, so I just changed the image again and every
 ## Assignment 3 - BI-7 CI/CD .yml file front end
 
 After some trial and error, I realized that I can just copy the code from the already existing Dockerfile for the front end. Then to get the env files I created variables in gitlab Settings -> CI/CD and used them to copy and paste as contents for the env files. Then had some issues with getting the builds to be set as artifacts, but after some tinkering with the path I got it working. 
+
+## Assignment 2 - BI-2-1 Docker image for front end should self generate dotenv files.
+
+Somehow didn't think of the fact that the `dotenv_prod` and `dotenv_dev` files need to be generated manually. Now they are generated and the data is added to them. Currently, the data is inside the dockerfile, but will be moved into the docker-compose later.  
