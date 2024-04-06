@@ -1,3 +1,6 @@
+before_script:
+  - cd backend
+
 stages:
   - test
   - build
