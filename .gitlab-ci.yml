@@ -13,6 +13,8 @@ test_backend:
   stage: backend
   <<: *backend_settings
   script:
+    - apt-get update -qy
+    - apt-get install -y mariadb-client
     - mysql -h localhost -u root -p$mariadb_root_password -e "SHOW DATABASES;"
     - cd backend
 #    - gradle test
