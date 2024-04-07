@@ -116,3 +116,5 @@ After that I started working on combining them. I once again had forgotten to fi
 I then also fixed how the gitlab variables are used to populate the dotenv files for the front end.
 
 Now after the env variable which disables the database test is enabled, an error appears. From the error message I get that the key word used for setting the password might be wrong, so I changed it. The new keyword removed the error, but it still did not work.
+
+After trying a lot of things, nothing ended up working. Asked bobby for help, but still nothing worked. Reverted back to the test being skipped.
