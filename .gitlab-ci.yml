@@ -25,20 +25,8 @@ test_backend:
     - apt-get update -qy
     - apt-get install -y mariadb-client
     - echo "$mariadb_root_password"
-    - echo $mariadb_root_password | mysqladmin ping -h localhost -u root
-    - |
-      while true; do
-        ping_output=$(mysqladmin ping -h localhost -u root -p$mariadb_root_password 2>&1)
-        echo "$ping_output"
-        if [[ $ping_output == *"alive"* ]]; then
-          echo "MariaDB is ready!"
-          break
-        else
-          echo "MariaDB is not yet ready - waiting..."
-          sleep 5
-        fi
-      done
-    - cd backend
+    - until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1; do echo "MariaDB is not yet ready - waiting... $mariadb_root_password"; sleep 5; done
+    - echo "MariaDB is ready!"
 
   #    - cd backend
   #    - cd backend
