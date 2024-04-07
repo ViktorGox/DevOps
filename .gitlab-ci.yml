@@ -7,7 +7,7 @@ install_mariadb:
   script:
     - apt update
     - apt install mariadb-server -y
-    - echo "12345678" | echo "n" | sudo mysql_secure_installation
+    - echo "12345678" | echo "n" | mysql_secure_installation
     - echo "12345678" | sudo mysql -u root -p
     - MariaDB [(none)]> CREATE DATABASE IF NOT EXISTS playlist;
   artifacts:
