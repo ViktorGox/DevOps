@@ -5,13 +5,11 @@ stages:
 install_mariadb:
   stage: setup
   script:
-    - wget https://downloads.mariadb.com/MariaDB/mariadb-10.7.3/bintar-linux-x86_64/mariadb-10.7.3-linux-x86_64.tar.gz
-    - tar -xzvf mariadb-10.7.3-linux-x86_64.tar.gz
-    - cd mariadb-10.7.3-linux-x86_64
-    - ./bin/mysql_install_db --datadir=/var/lib/mysql
-    - ./bin/mysqld_safe --datadir=/var/lib/mysql &
-    - sleep 10
-    - ./bin/mysql -e "CREATE DATABASE IF NOT EXISTS playlist;"
+    - sudo apt update
+    - sudo apt install mariadb-server
+    - echo "12345678" | echo "n" | sudo mysql_secure_installation
+    - echo "12345678" | sudo mysql -u root -p
+    - MariaDB [(none)]> CREATE DATABASE IF NOT EXISTS playlist;
   artifacts:
     paths:
       - /var/lib/mysql
