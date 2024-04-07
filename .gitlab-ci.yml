@@ -25,6 +25,7 @@ test_backend:
   <<: *backend_settings
   script:
     - cd backend
+    - nc -zv mariadb 3306
     - gradle test
   artifacts:
     paths:
