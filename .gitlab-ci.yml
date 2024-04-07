@@ -1,8 +1,8 @@
 variables:
-  MYSQL_ROOT_PASSWORD: "root_password"
-  MYSQL_USER: "user"
-  MYSQL_DATABASE: "playlist"
-  MYSQL_URL: "jdbc:mariadb://localhost:3306/playlist"
+  DB_USER: user
+  DB_PASSWORD: password
+  DB_HOST: database
+  BACKEND: localhost
 
 .backend_settings: &backend_settings
   image: gradle:jdk17
