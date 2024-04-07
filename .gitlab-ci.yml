@@ -24,8 +24,10 @@ test_backend:
   stage: backend
   <<: *backend_settings
   script:
+    - apt-get update
+    - apt-get install -y netcat
     - cd backend
-    - mysqladmin ping -h mariadb -u root -p$MARIADB_ROOT_PASSWORD
+    - nc -zv mariadb 3306
     - gradle test
   artifacts:
     paths:
