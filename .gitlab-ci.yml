@@ -3,10 +3,6 @@
   services:
     - name: mariadb:lts-jammy
       alias: mariadb
-  variables:
-    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
-    DATABASE_USERNAME: root
-    MARIADB_ROOT_PASSWORD: root_password
 
 .frontend_settings: &frontend_settings
   image: ghcr.io/cirruslabs/flutter
