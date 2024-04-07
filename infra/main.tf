@@ -1,3 +1,14 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "5.44.0"
+    }
+  }
+
+  required_version = ">= 1.2.0"
+}
+
 provider "aws" {
   region = "us-west-2"
 }
@@ -50,7 +61,7 @@ resource "aws_route_table_association" "route_table_association" {
   route_table_id = aws_route_table.route_table.id
 }
 
-resource "aws_instance" "example_instance" {
+resource "aws_instance" "instance" {
   ami           = "ami-08116b9957a259459"
   instance_type = "t2.micro"
   key_name      = "instance-ssh-v2"
@@ -61,3 +72,5 @@ resource "aws_instance" "example_instance" {
     Name = "FinalAssignmentInstance"
   }
 }
+
+
