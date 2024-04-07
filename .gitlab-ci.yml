@@ -19,7 +19,7 @@ test_backend:
       until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1 && systemctl status mariadb >/dev/null 2>&1; do
         echo "MariaDB is not yet ready - waiting..."
         echo "MariaDB Service Status:"
-        systemctl status mariadb
+        service status mariadb
         echo "MariaDB Error Log:"
         cat /var/log/mysql/error.log
         sleep 5
