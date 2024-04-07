@@ -3,6 +3,8 @@
   services:
     - name: mariadb:lts-jammy
       alias: mariadb
+      environment:
+        - MARIADB_ROOT_PASSWORD=root_password
 
 .frontend_settings: &frontend_settings
   image: ghcr.io/cirruslabs/flutter
