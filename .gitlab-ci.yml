@@ -1,4 +1,4 @@
-variables:
+environment:
   MYSQL_ROOT_PASSWORD: root_password
   MYSQL_USER: user
   MYSQL_DATABASE: playlist
