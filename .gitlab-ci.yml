@@ -4,9 +4,13 @@
     - name: mariadb:lts-jammy
       alias: mariadb
       variables:
-        MARIADB_URL: jdbc:mariadb://localhost:3306/playlist
         MARIADB_USERNAME: root
         MARIADB_ROOT_PASSWORD: root_password
+        MARIADB_PASSWORD: root_password
+        DB_HOST: localhost
+        DB_USER: root
+        DB_PASSWORD: root_password
+        MARIADB_DATABASE: playlist
 
 
 .frontend_settings: &frontend_settings
