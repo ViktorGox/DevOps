@@ -24,9 +24,14 @@ test_backend:
   script:
     - apt-get update -qy
     - apt-get install -y mariadb-client
-    - until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1; do echo "MariaDB is not yet ready - waiting..."; sleep 5; done
+    - |
+      until mysqladmin ping -h localhost -u root -p$mariadb_root_password >/dev/null 2>&1; do
+        echo "MariaDB is not yet ready - waiting..."
+        sleep 5
+      done
     - echo "MariaDB is ready!"
 #    - cd backend
+  #    - cd backend
 #    - gradle test
   artifacts:
     paths:
