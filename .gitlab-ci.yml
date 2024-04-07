@@ -24,7 +24,7 @@ test_backend:
   script:
     - apt-get update -qy
     - apt-get install -y mariadb-client
-    - echo $mariadb_root_password
+    - echo "$mariadb_root_password"
     - echo $mariadb_root_password | mysqladmin ping -h localhost -u root
     - |
       while true; do
