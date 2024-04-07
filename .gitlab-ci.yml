@@ -1,8 +1,8 @@
 variables:
-  DB_USER: user
-  DB_PASSWORD: password
-  DB_HOST: database
-  BACKEND: localhost
+  MARIADB_ROOT_PASSWORD: root_password
+  MARIADB_USER: user
+  MARIADB_DATABASE: playlist
+  MARIADB_URL: jdbc:mariadb://localhost:3306/playlist
 
 .backend_settings: &backend_settings
   image: gradle:jdk17
