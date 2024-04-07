@@ -5,6 +5,14 @@
       alias: mariadb
       variables:
         MARIADB_ROOT_PASSWORD: root_password
+        DB_USER: user
+        DB_PASSWORD: password
+        DB_HOST: database
+        BACKEND: localhost
+        MYSQL_ROOT_PASSWORD: root_password
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+        MYSQL_DATABASE: playlist
 
 stages:
   - backend
@@ -15,14 +23,10 @@ test_backend:
   script:
     - apt-get update -qy
     - apt-get install -y mariadb-client
-    - |
-      until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1 && ps aux | grep -v grep | grep mysql >/dev/null 2>&1; do
-        echo "MariaDB is not yet ready - waiting..."
-        ps aux | grep -v grep | grep mysql
-        sleep 5
-      done
+    - until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1; do echo "MariaDB is not yet ready - waiting..."; sleep 5; done
     - echo "MariaDB is ready!"
-  #    - gradle test
+#    - cd backend
+#    - gradle test
   artifacts:
     paths:
       - backend/build/reports/tests/
