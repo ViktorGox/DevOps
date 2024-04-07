@@ -22,11 +22,10 @@ test_backend:
   stage: backend
   <<: *backend_settings
   script:
-    - mariadb_root_password=1
     - apt-get update -qy
     - apt-get install -y mariadb-client
     - echo "$mariadb_root_password"
-    - until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1; do echo "MariaDB is not yet ready - waiting... $mariadb_root_password"; sleep 5; done
+    - until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1; do echo "MariaDB is not yet ready - waiting... $MARIADB_ROOT_PASSWORD"; sleep 5; done
     - echo "MariaDB is ready!"
 
   #    - cd backend
