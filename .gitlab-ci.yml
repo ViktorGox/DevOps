@@ -2,7 +2,7 @@ variables:
   MARIADB_ROOT_PASSWORD: "root_password"
   MARIADB_USER: "user"
   MARIADB_DATABASE: "playlist"
-  MARIADB_URL: "jdbc:mariadb://mariadb:3306/playlist"
+  MARIADB_URL: "jdbc:mariadb://172.17.0.3:3306/playlist"
 
 .backend_settings: &backend_settings
   image: gradle:jdk17
