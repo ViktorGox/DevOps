@@ -77,3 +77,9 @@ After a lot of problems with the ssh key I was trying to use it eventually worke
 to run ``chmod 400`` on the ssh key it didn't work. After that everything was easy but it definitely took some time for me to learn
 how to build the images correctly and set up everything. I created a send_files.sh script so it would be easier for us
 to upload files to a certain instance. At the end I ran the database and the backend on the same instance.
+
+## Assignment 4 - BI-12 Create a S3 bucket with frontend
+At first I tried to do the code with Chat-GPT but the code was deprecated so I looked online and I pasted the link where
+I got the code from about creating the S3 bucket using Terraform. At first when I opened the bucket through the browser,
+all I could see was raw html, then Viktor opened it as well, it was the same for him. At the end I think the problem was 
+in the Meta Data, because it was not set to html/text. 
