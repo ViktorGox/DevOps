@@ -2,7 +2,7 @@ variables:
   MARIADB_ROOT_PASSWORD: root_password
   DB_USER: user
   DB_PASSWORD: password
-  DB_HOST: database
+  DB_HOST: localhost
   BACKEND: localhost
   MYSQL_ROOT_PASSWORD: root_password
   MYSQL_USER: user
@@ -12,10 +12,8 @@ variables:
 .backend_settings: &backend_settings
   image: gradle:jdk17
   services:
-    - name: mariadb:latest
-      alias: db-mariadb
-      entrypoint: [ "/usr/bin/mysqld" ]
-      command: [ "--datadir=/var/lib/mysql", "--socket=/var/run/mysqld/mysqld.sock", "--port=3306" ]
+    - name: mariadb:lts-jammy
+      alias: mariadb
 
 stages:
   - backend
@@ -24,24 +22,9 @@ test_backend:
   stage: backend
   <<: *backend_settings
   script:
-    - apt-get update -qy
-    - apt-get install -y mariadb-client
-    - echo "$(mysql -h localhost -u root -p$$mariadb_root_password -e ";")"
-    - ping_output=$(mysqladmin ping -h localhost -u root -p$$MARIADB_ROOT_PASSWORD 2>&1)
-    - |
-      while true; do
-        ping_output=$(mysqladmin ping -h localhost -u root -p$$MARIADB_ROOT_PASSWORD 2>&1)
-        echo "$ping_output"
-        if [[ $ping_output == *"alive"* ]]; then
-          echo "MariaDB is ready!"
-          break
-        else
-          echo "MariaDB is not yet ready - waiting..."
-          sleep 5
-        fi
-      done
-  #    - cd backend
-  #    - gradle test
+    - sleep 60
+    - cd backend
+    - gradle test
   artifacts:
     paths:
       - backend/build/reports/tests/
