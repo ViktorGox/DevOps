@@ -25,11 +25,17 @@ test_backend:
     - apt-get update -qy
     - apt-get install -y mariadb-client
     - |
-      until mysqladmin ping -h localhost -u root -p$mariadb_root_password >/dev/null 2>&1; do
-        echo "MariaDB is not yet ready - waiting..."
-        sleep 5
+      while true; do
+        ping_output=$(mysqladmin ping -h localhost -u root -p$mariadb_root_password 2>&1)
+        if [[ $ping_output == *"alive"* ]]; then
+          echo "MariaDB is ready!"
+          break
+        else
+          echo "MariaDB is not yet ready - waiting..."
+          echo "$ping_output"
+          sleep 5
+        fi
       done
-    - echo "MariaDB is ready!"
 #    - cd backend
   #    - cd backend
 #    - gradle test
