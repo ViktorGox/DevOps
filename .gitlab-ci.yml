@@ -1,14 +1,13 @@
-environment:
-  MYSQL_ROOT_PASSWORD: root_password
-  MYSQL_USER: user
-  MYSQL_DATABASE: playlist
-  MYSQL_URL: jdbc:mariadb://localhost:3306/playlist
-
 .backend_settings: &backend_settings
   image: gradle:jdk17
   services:
     - name: mariadb:lts-jammy
       alias: mariadb
+      variables:
+        MARIADB_URL: jdbc:mariadb://localhost:3306/playlist
+        MARIADB_USERNAME: root
+        MARIADB_ROOT_PASSWORD: root_password
+
 
 .frontend_settings: &frontend_settings
   image: ghcr.io/cirruslabs/flutter
