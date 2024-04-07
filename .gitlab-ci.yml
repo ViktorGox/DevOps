@@ -1,5 +1,5 @@
 services:
-  backend:
+  - name: backend
     image: your_backend_image
     environment:
       DOCKER_ENV: true
@@ -13,7 +13,7 @@ services:
       retries: 5
       timeout: 5s
 
-  database:
+  - name: database
     image: mariadb:lts-jammy
     environment:
       MYSQL_ROOT_PASSWORD: root_password
