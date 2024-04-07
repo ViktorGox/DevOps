@@ -17,8 +17,3 @@ install_mariadb:
       - /var/lib/mysql
   only:
     - ci-cd-yml-file-for-backend
-
-test_database:
-  stage: test
-  script:
-    - # Your test commands here
