@@ -25,7 +25,7 @@ test_backend:
   <<: *backend_settings
   script:
     - cd backend
-    - nc -zv mariadb 3306
+    - mysqladmin ping -h mariadb -u root -p$MARIADB_ROOT_PASSWORD
     - gradle test
   artifacts:
     paths:
