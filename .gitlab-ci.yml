@@ -22,6 +22,7 @@ test_backend:
   stage: backend
   <<: *backend_settings
   script:
+    - mariadb_root_password=1
     - apt-get update -qy
     - apt-get install -y mariadb-client
     - echo "$mariadb_root_password"
