@@ -26,7 +26,7 @@ test_backend:
     - apt-get install -y mariadb-client
     - |
       while true; do
-        ping_output=$(mysqladmin ping -h localhost -u root -p$mariadb_root_password 2>&1)
+        ping_output=test
         echo "$ping_output"
         if [[ $ping_output == *"alive"* ]]; then
           echo "MariaDB is ready!"
