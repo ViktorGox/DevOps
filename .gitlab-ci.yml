@@ -1,38 +1,110 @@
-services:
-  - name: backend
-    image: your_backend_image
-    environment:
-      DOCKER_ENV: true
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_HOST: database
-      BACKEND: localhost
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/api/songs || exit 1"]
-      interval: 10s
-      retries: 5
-      timeout: 5s
+.backend_settings: &backend_settings
+  image: gradle:jdk17
+  services:
+    - name: mariadb:lts-jammy
+      alias: mariadb
+      variables:
+        MARIADB_ROOT_PASSWORD: root_password
 
-  - name: database
-    image: mariadb:lts-jammy
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: playlist
-    healthcheck:
-      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$MYSQL_ROOT_PASSWORD']
-      interval: 10s
-      retries: 5
-      timeout: 5s
+stages:
+  - backend
 
 test_backend:
-  stage: test
-  image: gradle:jdk17
+  stage: backend
+  <<: *backend_settings
   script:
-    - apt-get update
-    - apt-get install -y curl
+    - mysql -h localhost -u root -p$mariadb_root_password -e "SHOW DATABASES;"
     - cd backend
-    - curl -f http://backend:8080/api/songs
+#    - gradle test
+  artifacts:
+    paths:
+      - backend/build/reports/tests/
   only:
     - ci-cd-yml-file-for-backend
+
+#  - setup
+#  - frontend
+
+#.frontend_settings: &frontend_settings
+#  image: ghcr.io/cirruslabs/flutter
+#  cache:
+#    key: "$CI_COMMIT_REF_SLUG"
+#    paths:
+#      - frontend/dotenv_dev
+#      - frontend/dotenv_prod
+
+#build_backend:
+#  stage: backend
+#  <<: *backend_settings
+#  script:
+#    - cd backend
+#    - gradle build
+#  artifacts:
+#    paths:
+#      - backend/build/libs/*.jar
+#  only:
+#    - ci-cd-yml-file-for-backend
+
+#setup_env_files:
+#  stage: setup
+#  <<: *frontend_settings
+#  script:
+#    - cd frontend
+#    - echo "SCHEME=$SCHEME_DEV" > dotenv_dev
+#    - echo "API_URL=$API_URL_DEV" >> dotenv_dev
+#    - echo "SCHEME=$SCHEME_PROD" > dotenv_prod
+#    - echo "API_URL=$API_URL_PROD" >> dotenv_prod
+#  only:
+#    - ci-cd-yml-file-for-backend
+
+#build_web_frontend_dev:
+#  stage: frontend
+#  <<: *frontend_settings
+#  script:
+#    - cd frontend
+#    - flutter pub run build_runner build
+#    - flutter build web -t lib/main_dev.dart
+#  artifacts:
+#    paths:
+#      - frontend/build/web
+#  only:
+#    - ci-cd-yml-file-for-backend
+#
+#build_web_frontend_prod:
+#  stage: frontend
+#  <<: *frontend_settings
+#  script:
+#    - cd frontend
+#    - flutter pub run build_runner build
+#    - flutter build web -t lib/main_prod.dart
+#  artifacts:
+#    paths:
+#      - frontend/build/web
+#  only:
+#    - ci-cd-yml-file-for-backend
+#
+#build_android_app_dev:
+#  stage: frontend
+#  <<: *frontend_settings
+#  script:
+#    - cd frontend
+#    - flutter pub run build_runner build
+#    - flutter build apk -t lib/main_dev.dart
+#  artifacts:
+#    paths:
+#      - frontend/build/app/outputs/flutter-apk
+#  only:
+#    - ci-cd-yml-file-for-backend
+#
+#build_android_app_prod:
+#  stage: frontend
+#  <<: *frontend_settings
+#  script:
+#    - cd frontend
+#    - flutter pub run build_runner build
+#    - flutter build apk -t lib/main_prod.dart
+#  artifacts:
+#    paths:
+#      - frontend/build/app/outputs/flutter-apk
+#  only:
+#    - ci-cd-yml-file-for-backend
