@@ -7,7 +7,6 @@
     DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
     DATABASE_USERNAME: root
     DATABASE_PASSWORD: root_password
-    DOCKER_ENV: true
 
 .frontend_settings: &frontend_settings
   image: ghcr.io/cirruslabs/flutter
