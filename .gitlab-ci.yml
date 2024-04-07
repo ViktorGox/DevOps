@@ -19,6 +19,7 @@ test_backend:
       until mysql -h localhost -u root -p$mariadb_root_password -e ";" >/dev/null 2>&1 && ps aux | grep -v grep | grep mysql >/dev/null 2>&1; do
         echo "MariaDB is not yet ready - waiting..."
         echo "MariaDB Error Log:"
+        ls -l /var/log/mysql
         cat /var/log/mysql/error.log
         sleep 5
       done
