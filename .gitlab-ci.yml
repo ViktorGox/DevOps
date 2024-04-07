@@ -30,10 +30,8 @@ test_backend:
   stage: backend
   <<: *backend_settings
   script:
-    - apt-get update
-    - apt-get install -y netcat
     - cd backend
-    - nc -zv mariadb 3306
+    - curl -X GET jdbc:mariadb://localhost:3306/playlist
     - gradle test
   artifacts:
     paths:
