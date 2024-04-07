@@ -69,3 +69,11 @@ Somehow didn't think of the fact that the `dotenv_prod` and `dotenv_dev` files n
 ## Assignment 2 - BI-9 Add front end to the docker compose.
 
 Used arguments to provide the front end Dockerfile with data for its env files.
+
+## Assignment 4 - BI-10 Run the backend on a EC2 instance
+Our idea was for me to create a basic AWS structure where we only have 1 EC2 instance where the backend was supposed to
+be. I thought a lot about how to do it. Eventually I discovered that I can just upload the Docker images onto the instance.
+After a lot of problems with the ssh key I was trying to use it eventually worked. The problem I has was that when I tried 
+to run ``chmod 400`` on the ssh key it didn't work. After that everything was easy but it definitely took some time for me to learn
+how to build the images correctly and set up everything. I created a send_files.sh script so it would be easier for us
+to upload files to a certain instance. At the end I ran the database and the backend on the same instance.
