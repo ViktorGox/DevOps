@@ -27,16 +27,18 @@ test_backend:
     - |
       while true; do
         ping_output=$(mysqladmin ping -h localhost -u root -p$mariadb_root_password 2>&1)
+        echo "$ping_output"
         if [[ $ping_output == *"alive"* ]]; then
           echo "MariaDB is ready!"
           break
         else
           echo "MariaDB is not yet ready - waiting..."
-          echo "$ping_output"
           sleep 5
         fi
       done
-#    - cd backend
+    - cd backend
+
+  #    - cd backend
   #    - cd backend
 #    - gradle test
   artifacts:
