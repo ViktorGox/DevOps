@@ -5,8 +5,8 @@ stages:
 install_mariadb:
   stage: setup
   script:
-    - sudo apt update
-    - sudo apt install mariadb-server
+    - apt update
+    - apt install mariadb-server
     - echo "12345678" | echo "n" | sudo mysql_secure_installation
     - echo "12345678" | sudo mysql -u root -p
     - MariaDB [(none)]> CREATE DATABASE IF NOT EXISTS playlist;
