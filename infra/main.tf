@@ -61,7 +61,7 @@ resource "aws_route_table_association" "route_table_association" {
   route_table_id = aws_route_table.route_table.id
 }
 
-resource "aws_instance" "instance" {
+resource "aws_instance" "instance_v2" {
   ami           = "ami-08116b9957a259459"
   instance_type = "t2.micro"
   key_name      = "instance-ssh-v2"
