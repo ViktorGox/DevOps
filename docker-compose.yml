@@ -1,16 +1,8 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-      args:
-        - SCHEME=http
-        - API_URL=localhost:8080
-    ports:
-      - "80:8080"
   backend:
+    image: registry.gitlab.com/saxion.nl/hbo-ict/2.3-devops/2023-2024/exam-assignment/29/backend
     environment:
       DOCKER_ENV: true
       DB_USER: user
