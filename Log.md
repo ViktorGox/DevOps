@@ -118,3 +118,17 @@ I then also fixed how the gitlab variables are used to populate the dotenv files
 Now after the env variable which disables the database test is enabled, an error appears. From the error message I get that the key word used for setting the password might be wrong, so I changed it. The new keyword removed the error, but it still did not work.
 
 After trying a lot of things, nothing ended up working. Asked bobby for help, but still nothing worked. Reverted back to the test being skipped.
+
+## Assignment 4 - BI-10 Run the backend on a EC2 instance
+Our idea was for me to create a basic AWS structure where we only have 1 EC2 instance where the backend was supposed to
+be. I thought a lot about how to do it. Eventually I discovered that I can just upload the Docker images onto the instance.
+After a lot of problems with the ssh key I was trying to use it eventually worked. The problem I has was that when I tried 
+to run ``chmod 400`` on the ssh key it didn't work. After that everything was easy but it definitely took some time for me to learn
+how to build the images correctly and set up everything. I created a send_files.sh script so it would be easier for us
+to upload files to a certain instance. At the end I ran the database and the backend on the same instance.
+
+## Assignment 4 - BI-12 Create a S3 bucket with frontend
+At first I tried to do the code with Chat-GPT but the code was deprecated so I looked online and I pasted the link where
+I got the code from about creating the S3 bucket using Terraform. At first when I opened the bucket through the browser,
+all I could see was raw html, then Viktor opened it as well, it was the same for him. At the end I think the problem was 
+in the Meta Data, because it was not set to html/text. 
