@@ -1,7 +1,7 @@
-#default:
-#  image: docker:24.0.5
-#  services:
-#    - docker:24.0.5-dind
+default:
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
 
 stages:
   - setup
@@ -9,9 +9,12 @@ stages:
 create_docker_images:
   stage: setup
   script:
-    - echo "$CI_REGISTRY"
-    - echo "$CI_REGISTRY_PASSWORD"
-    - echo "$CI_REGISTRY_USER"
+    - echo $LOGIN_PASSWORD | docker login registry.gitlab.com -u $LOGIN_USERNAME --password-stdin
+#    - docker build -t backend -f ./backend/Dockerfile .
+#    - docker save backend > backend.tar
+  artifacts:
+    paths:
+      - backend.tar
   only:
     - ci-cd-builds-docker-images
 
