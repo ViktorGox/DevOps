@@ -18,6 +18,7 @@ create_docker_images:
     - dos2unix dockerize.sh
     - chmod +x ./dockerize.sh
     - ls
+    - cat ./dockerize.sh
     - ./dockerize.sh build
     - docker images
   only:
