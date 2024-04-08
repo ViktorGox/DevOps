@@ -17,9 +17,9 @@ create_docker_images:
     - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
     - dos2unix dockerize.sh
     - chmod +x ./dockerize.sh
-    - ls
+    - ls -l ./dockerize.sh
     - cat ./dockerize.sh
-    - ./dockerize.sh build
+    - bash dockerize.sh build
     - docker images
   only:
     - ci-cd-builds-docker-images
