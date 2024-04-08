@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    image: ${REGISTRY_PATH}/backend:latest
+    image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest
     environment:
       DOCKER_ENV: true
       DB_USER: user
@@ -37,7 +37,7 @@ services:
       retries: 5
       timeout: 5s
   data_loader:
-    image: ${CONVERTED_URL}/data_loader
+    image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/data_loader:latest
     build: seed-application
     environment:
       BACKEND: backend
