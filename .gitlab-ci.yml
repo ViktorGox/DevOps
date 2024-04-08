@@ -9,17 +9,11 @@ stages:
 create_docker_images:
   stage: setup
   script:
-    - echo "$CI_PROJECT_URL"
-    - echo "$CI_PROJECT_NAMESPACE"
-    - echo "$CI_PROJECT_NAME"
-    - echo "$REGISTRY_PATH"
-    - echo "$CONVERTED_URL"
     - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
-    - dos2unix dockerize.sh
+    - docker-compose build
+    - dos2unix ./dockerize.sh
     - chmod +x ./dockerize.sh
-    - ls -l ./dockerize.sh
-    - cat ./dockerize.sh
-    - bash dockerize.sh build
+    - ./dockerize.sh build
     - docker images
   only:
     - ci-cd-builds-docker-images
