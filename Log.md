@@ -70,6 +70,55 @@ Somehow didn't think of the fact that the `dotenv_prod` and `dotenv_dev` files n
 
 Used arguments to provide the front end Dockerfile with data for its env files.
 
+## Assignment 3 - BI-8 CI/CD .yml file for backend.
+
+This time the first thing done was look up the already existing Dockerfile for the backend. Using ChatGPT I also tried adding the database. The result was this:
+```
+stages:
+  - test
+  - build
+
+test_backend:
+  stage: test
+  image: gradle:jdk17
+  services:
+    - name: mariadb:lts-jammy
+      alias: mariadb
+  variables:
+    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
+    DATABASE_USERNAME: root
+    DATABASE_PASSWORD: root_password
+  script:
+    - gradle test
+  artifacts:
+    paths:
+      - backend/build/reports/tests/
+  only:
+    - ci-cd-yml-file-for-backend
+
+build_backend:
+  stage: build
+  image: gradle:jdk17
+  script:
+    - gradle build
+  artifacts:
+    paths:
+      - backend/build/libs/*.jar
+  only:
+    - ci-cd-yml-file-for-backend
+```
+Of course that didn't work, because I was in the wrong directory. But also the database implementation was wrong. I then tried some other ways proposed by ChatGPT, but they failed too. 
+
+Later I set a env variable to true, which I thought was supposed to be, but turns out that actually disabled the test which checks the database, so I thought it was working now. Then I tried to reduce duplicate lines using settings.
+
+After that I started working on combining them. I once again had forgotten to fix the path, so that failed. Also, I had the set-up in the same stage as the testing and building of the front end. I tried setting them to have a dependency on the other jobs, but that did not work, and I am not sure why. So I separated them into different stages. 
+
+I then also fixed how the gitlab variables are used to populate the dotenv files for the front end.
+
+Now after the env variable which disables the database test is enabled, an error appears. From the error message I get that the key word used for setting the password might be wrong, so I changed it. The new keyword removed the error, but it still did not work.
+
+After trying a lot of things, nothing ended up working. Asked bobby for help, but still nothing worked. Reverted back to the test being skipped.
+
 ## Assignment 4 - BI-10 Run the backend on a EC2 instance
 Our idea was for me to create a basic AWS structure where we only have 1 EC2 instance where the backend was supposed to
 be. I thought a lot about how to do it. Eventually I discovered that I can just upload the Docker images onto the instance.
