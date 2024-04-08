@@ -1,10 +1,10 @@
 stages:
   - setup
 
-setup_env_files:
+create_docker_images:
   stage: setup
   script:
-    - echo "Yep, works!"
+    - docker build -t backend -f ./backend/Dockerfile .
   only:
     - ci-cd-builds-docker-images
 
