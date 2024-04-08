@@ -9,7 +9,8 @@ stages:
 create_docker_images:
   stage: setup
   script:
-    - docker login registry.gitlab.com -u $LOGIN_USERNAME -p $LOGIN_PASSWORD
+    - echo "$LOGIN_USERNAME"
+    - docker login -u $LOGIN_USERNAME -p $LOGIN_PASSWORD registry.gitlab.com
 #    - docker build -t backend -f ./backend/Dockerfile .
 #    - docker save backend > backend.tar
   artifacts:
