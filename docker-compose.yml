@@ -1,16 +1,8 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-      args:
-        - SCHEME=http
-        - API_URL=localhost:8080
-    ports:
-      - "80:8080"
   backend:
+    image: ${REGISTRY_PATH}/backend:latest
     environment:
       DOCKER_ENV: true
       DB_USER: user
@@ -45,6 +37,7 @@ services:
       retries: 5
       timeout: 5s
   data_loader:
+    image: ${CONVERTED_URL}/data_loader
     build: seed-application
     environment:
       BACKEND: backend

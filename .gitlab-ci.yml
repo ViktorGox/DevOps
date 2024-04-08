@@ -1,3 +1,6 @@
+variables:
+  CONVERTED_URL: $CI_PROJECT_URL | sed 's|https://gitlab.com/|reg istry.gitlab.com/|'
+
 default:
   image: docker:24.0.5
   services:
@@ -9,12 +12,17 @@ stages:
 create_docker_images:
   stage: setup
   script:
-    - echo "$LOGIN_USERNAME"
-    - echo "$API_URL_DEV"
-#    - docker login -u $LOGIN_USERNAME -p $LOGIN_PASSWORD registry.gitlab.com
+    - echo "$CI_PROJECT_URL"
+    - echo "$CI_PROJECT_NAMESPACE"
+    - echo "$CI_PROJECT_NAME"
+    - echo "$REGISTRY_PATH"
+    - echo "$CONVERTED_URL"
     - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
-  #    - docker build -t backend -f ./backend/Dockerfile .
-#    - docker save backend > backend.tar
+    - docker build -t backend -f ./backend/Dockerfile .
+    - dos2unix dockerize.sh
+    - chmod +x ./dockerize.sh
+    - ./dockerize.sh build
+    - docker images
   only:
     - ci-cd-builds-docker-images
 
