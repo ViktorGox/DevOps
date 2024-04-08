@@ -12,6 +12,10 @@ create_docker_images:
   stage: setup
   script:
     - docker build -t backend -f ./backend/Dockerfile .
+    - docker save backend > backend.tar
+  artifacts:
+    paths:
+      - backend.tar
   only:
     - ci-cd-builds-docker-images
 
