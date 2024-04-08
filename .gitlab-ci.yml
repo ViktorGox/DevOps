@@ -12,6 +12,8 @@ create_docker_images:
     - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
     - docker-compose build
     - docker images
+    - docker push registry.gitlab.com/saxion.nl/hbo-ict/2.3-devops/2023-2024/exam-assignment/29/backend
+    - docker push registry.gitlab.com/saxion.nl/hbo-ict/2.3-devops/2023-2024/exam-assignment/29/data_loader
   only:
     - ci-cd-builds-docker-images
 
