@@ -12,11 +12,9 @@ create_docker_images:
     - echo "$LOGIN_USERNAME"
     - echo "$API_URL_DEV"
     - docker login -u $LOGIN_USERNAME -p $LOGIN_PASSWORD registry.gitlab.com
-#    - docker build -t backend -f ./backend/Dockerfile .
+    - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
+  #    - docker build -t backend -f ./backend/Dockerfile .
 #    - docker save backend > backend.tar
-  artifacts:
-    paths:
-      - backend.tar
   only:
     - ci-cd-builds-docker-images
 
