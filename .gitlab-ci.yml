@@ -130,6 +130,7 @@ create_docker_images:
     - ci-cd-builds-docker-images
 
 send_images:
+  stage: send_images
   image: ubuntu:latest
   script:
     - echo "$SSH_KEY" | base64 -d > /tmp/ssh_key
