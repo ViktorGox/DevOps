@@ -156,5 +156,3 @@ send_images:
       backend"
   only:
     - ec2-instance-run-uploaded-images-from-ci-cd
-
-
