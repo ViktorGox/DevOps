@@ -53,10 +53,10 @@ setup_env_files:
   <<: *frontend_settings
   script:
     - cd frontend
-    - echo "SCHEME=$SCHEME_DEV" > dotenv_dev
-    - echo "API_URL=$API_URL_DEV" >> dotenv_dev
-    - echo "SCHEME=$SCHEME_PROD" > dotenv_prod
-    - echo "API_URL=$API_URL_PROD" >> dotenv_prod
+    - echo "SCHEME=$SCHEME" > dotenv_dev
+    - echo "API_URL=$INSTANCE_IP" >> dotenv_dev
+    - echo "SCHEME=$SCHEME" > dotenv_prod
+    - echo "API_URL=$INSTANCE_IP" >> dotenv_prod
   only:
     - ci-cd-builds-docker-images
 
