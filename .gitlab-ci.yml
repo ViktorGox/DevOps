@@ -133,12 +133,11 @@ send_images:
   stage: send_images
   image: ubuntu:latest
   script:
-    - echo "$SSH_KEY" | base64 -d > /tmp/ssh_key
+    - echo "$SSH_KEY" > /tmp/ssh_key
     - chmod 600 /tmp/ssh_key
     - ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key user@$54.69.168.29 'docker login -u $LOGIN_USERNAME -p $LOGIN_PASSWORD registry.gitlab.com'
     - ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key user@$54.69.168.29 'docker pull backend:latest'
   only:
     - ci-cd-runs-images-in-ec2-instance
-
 
 
