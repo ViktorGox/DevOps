@@ -144,6 +144,8 @@ set_up_bucket:
   stage: send_images
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
+    - echo $AWS_ACCESS_KEY_ID > ~/.aws/credentials
+    - cat ~/.aws/credentials
     - cd infra
     - aws s3 cp index.html s3://devops-final-assignment-bobby-viktor-v-side-3/
   only:
