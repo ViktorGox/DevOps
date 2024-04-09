@@ -138,6 +138,6 @@ send_images:
     - chmod 400 ssh_key.pem
     - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$INSTANCE_IP "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com && sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest"
   only:
-    - change-ssh-key-to-base64-and-replace-hardcoded-data-in-the-ci-cd-file-with-the-real
+    - ec2-instance-run-uploaded-images-from-ci-cd
 
 
