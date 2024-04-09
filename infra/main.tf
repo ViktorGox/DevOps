@@ -136,3 +136,10 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   })
 }
 
+output "instance_ip" {
+  value = aws_instance.instance_v2.public_ip
+}
+
+output "bucket_website_endpoint" {
+  value = aws_s3_bucket.bucket.website_endpoint
+}
