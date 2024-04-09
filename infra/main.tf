@@ -92,7 +92,7 @@ resource "aws_s3_bucket" "bucket" {
   bucket = "devops-final-assignment-bobby-viktor"
 }
 
-resource "aws_s3_bucket_website_configuration" "blog" {
+resource "aws_s3_bucket_website_configuration" "bucket" {
   bucket = aws_s3_bucket.bucket.id
   index_document {
     suffix = "index.html"
@@ -141,5 +141,5 @@ output "instance_ip" {
 }
 
 output "bucket_website_endpoint" {
-  value = aws_s3_bucket.bucket.website_endpoint
+  value = aws_s3_bucket_website_configuration.bucket.website_endpoint
 }
