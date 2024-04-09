@@ -132,3 +132,7 @@ At first I tried to do the code with Chat-GPT but the code was deprecated so I l
 I got the code from about creating the S3 bucket using Terraform. At first when I opened the bucket through the browser,
 all I could see was raw html, then Viktor opened it as well, it was the same for him. At the end I think the problem was 
 in the Meta Data, because it was not set to html/text. 
+
+## Assignment 5 - BI-14 CI/CD builds docker images and upload them to the gitlab container registry.
+
+Tested a bunch of stuff locally to see how it works, used ChatGPT and the official Gitlab documentation. I couldn't figure out why I wasn't able to run ./dockerize.sh in the CI/CD environment, so I just did the scripts work manually. At first, I was unaware that the `CI_PROJECT_NAMESPACE` and `CI_PROJECT_NAME` were a thing, so I tried making a script which takes in the Url of the repository and converts it, but that turned out to be unnecessary. Something that will need to be done is to delete exiting containers if that's possible.

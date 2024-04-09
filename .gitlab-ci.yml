@@ -21,6 +21,7 @@ stages:
   - setup
   - frontend
   - backend
+  - build_images
 
 test_backend:
   stage: backend
@@ -32,7 +33,7 @@ test_backend:
     paths:
       - backend/build/reports/tests/
   only:
-    - ci-cd-yml-file-for-backend
+    - ci-cd-builds-docker-images
 
 build_backend:
   stage: backend
@@ -44,7 +45,7 @@ build_backend:
     paths:
       - backend/build/libs/*.jar
   only:
-    - ci-cd-yml-file-for-backend
+    - ci-cd-builds-docker-images
 
 setup_env_files:
   stage: setup
@@ -56,7 +57,7 @@ setup_env_files:
     - echo "SCHEME=$SCHEME_PROD" > dotenv_prod
     - echo "API_URL=$API_URL_PROD" >> dotenv_prod
   only:
-    - ci-cd-yml-file-for-backend
+    - ci-cd-builds-docker-images
 
 build_web_frontend_dev:
   stage: frontend
@@ -69,7 +70,7 @@ build_web_frontend_dev:
     paths:
       - frontend/build/web
   only:
-    - ci-cd-yml-file-for-backend
+    - ci-cd-builds-docker-images
 
 build_web_frontend_prod:
   stage: frontend
@@ -82,7 +83,7 @@ build_web_frontend_prod:
     paths:
       - frontend/build/web
   only:
-    - ci-cd-yml-file-for-backend
+    - ci-cd-builds-docker-images
 
 build_android_app_dev:
   stage: frontend
@@ -95,7 +96,7 @@ build_android_app_dev:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - ci-cd-yml-file-for-backend
+    - ci-cd-builds-docker-images
 
 build_android_app_prod:
   stage: frontend
@@ -108,4 +109,21 @@ build_android_app_prod:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - ci-cd-yml-file-for-backend
+    - ci-cd-builds-docker-images
+
+create_docker_images:
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  stage: build_images
+  script:
+    - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
+    - docker-compose build
+    - |
+      images=$(docker images --format "{{.Repository}}:{{.Tag}}")
+
+      for image in $images; do
+        docker push "$image"
+      done
+  only:
+    - ci-cd-builds-docker-images

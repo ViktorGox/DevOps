@@ -1,16 +1,8 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-      args:
-        - SCHEME=http
-        - API_URL=localhost:8080
-    ports:
-      - "80:8080"
   backend:
+    image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest
     environment:
       DOCKER_ENV: true
       DB_USER: user
@@ -31,7 +23,8 @@ services:
       retries: 5
       timeout: 5s
   database:
-     image: mariadb:lts-jammy
+     image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest
+     build: database
      environment:
       MYSQL_ROOT_PASSWORD: root_password
       MYSQL_USER: user
@@ -45,6 +38,7 @@ services:
       retries: 5
       timeout: 5s
   data_loader:
+    image: registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/data_loader:latest
     build: seed-application
     environment:
       BACKEND: backend

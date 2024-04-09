@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 build() {
     echo "Building Docker containers"
     docker-compose build
