@@ -136,8 +136,8 @@ send_images:
     - apt-get update && apt-get install -y openssh-client
     - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
     - chmod 400 ssh_key.pem
-    - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$INSTANCE_IP "\
-      echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com && \
+    - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$INSTANCE_IP \
+      "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com && \
       sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest && \
       sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest && \
       sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest backend && \
