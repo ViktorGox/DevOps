@@ -136,7 +136,7 @@ send_images:
     - apt-get update && apt-get install -y openssh-client
     - echo "$SSH_KEY" > /tmp/ssh_key
     - chmod 600 /tmp/ssh_key
-    - ssh -o StrictHostKeyChecking=no -T -i /tmp/ssh_key ubuntu@54.69.168.29 'docker login -u $LOGIN_USERNAME -p $LOGIN_PASSWORD registry.gitlab.com'
+    - ssh -o StrictHostKeyChecking=no -T -i /tmp/ssh_key user@$54.69.168.29 'echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com'
     - ssh -o StrictHostKeyChecking=no -T -i /tmp/ssh_key ubuntu@54.69.168.29 'docker pull backend:latest'
   only:
     - ci-cd-runs-images-in-ec2-instance
