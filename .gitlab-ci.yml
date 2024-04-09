@@ -141,15 +141,14 @@ send_images:
       sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest &&
       sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest && 
       sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest backend && 
-      sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest database && 
-      sudo docker network create my_network && 
+      sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest database &&  
       sudo docker run --name database -p 3306:3306 --network my_network \
       -e MYSQL_ROOT_PASSWORD=root_password \
       -e MYSQL_USER=user \
       -e MYSQL_PASSWORD=password \
       -e MYSQL_DATABASE=playlist \
       database &&
-      docker run --name backend -p 8080:8080 --network my_network \
+      sudo docker run --name backend -p 8080:8080 --network my_network \
       -e DB_USER=user \
       -e DB_PASSWORD=password \
       -e DB_HOST=database \
