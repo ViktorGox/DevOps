@@ -75,12 +75,30 @@ resource "aws_route_table_association" "route_table_association" {
   route_table_id = aws_route_table.route_table.id
 }
 
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
+resource "aws_key_pair" "ssh_key" {
+  key_name   = "my-ssh-key"
+  public_key = tls_private_key.ssh_key.public_key_openssh
+}
+
+
 resource "aws_instance" "instance_v2" {
   ami           = "ami-08116b9957a259459"
   instance_type = "t2.micro"
-  key_name      = "instance-ssh-v2"
+  key_name      = aws_key_pair.ssh_key.key_name
   subnet_id     = aws_subnet.subnet.id
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
+  user_data     = <<-EOF
+                  #!/bin/bash
+                  sudo apt update
+                  sudo apt install -y docker.io
+                  sudo systemctl start docker
+                  sudo systemctl enable docker
+                  EOF
 
   tags = {
     Name = "FinalAssignmentInstance"
@@ -142,4 +160,9 @@ output "instance_ip" {
 
 output "bucket_website_endpoint" {
   value = aws_s3_bucket_website_configuration.bucket.website_endpoint
+}
+
+output "ssh_private_key" {
+  value = tls_private_key.ssh_key.private_key_pem
+  sensitive = true
 }
