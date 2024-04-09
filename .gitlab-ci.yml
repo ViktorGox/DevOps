@@ -140,4 +140,12 @@ send_images:
   only:
     - change-ssh-key-to-base64-and-replace-hardcoded-data-in-the-ci-cd-file-with-the-real
 
+set_up_bucket:
+  stage: send_images
+  image: ubuntu:latest
+  script:
+    - echo $AWS_CLI > ~/.aws/credentials
+    - cat ~/.aws/credentials
+  only:
+      - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
