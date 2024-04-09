@@ -23,7 +23,7 @@ env_vars["INSTANCE_IP"]=$(terraform output -json instance_ip | jq -r '.')
 env_vars["BUCKET_URL"]=$(terraform output -json bucket_website_endpoint | jq -r '.')
 
 aws_ssh_key=$(terraform output -raw ssh_private_key)
-env_vars["AWS_SSH_KEY"]=$(echo "$aws_ssh_key" | tr -d '\n')
+env_vars["AWS_SSH_KEY"]=$(echo -n "$aws_ssh_key" | base64 | tr -d '\n')
 
 response=$(curl --header "PRIVATE-TOKEN: $TOKEN" "https://gitlab.com/api/v4/projects?search=$PROJECT_NAME")
 

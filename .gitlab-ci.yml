@@ -53,10 +53,10 @@ setup_env_files:
   <<: *frontend_settings
   script:
     - cd frontend
-    - echo "SCHEME=$SCHEME_DEV" > dotenv_dev
-    - echo "API_URL=$API_URL_DEV" >> dotenv_dev
-    - echo "SCHEME=$SCHEME_PROD" > dotenv_prod
-    - echo "API_URL=$API_URL_PROD" >> dotenv_prod
+    - echo "SCHEME=$SCHEME" > dotenv_dev
+    - echo "API_URL=$INSTANCE_IP" >> dotenv_dev
+    - echo "SCHEME=$SCHEME" > dotenv_prod
+    - echo "API_URL=$INSTANCE_IP" >> dotenv_prod
   only:
     - ci-cd-builds-docker-images
 
@@ -134,10 +134,10 @@ send_images:
   image: ubuntu:latest
   script:
     - apt-get update && apt-get install -y openssh-client
-    - base64 -d <<< "$SSH_KEY" > ssh_key.pem
+    - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
     - chmod 400 ssh_key.pem
-    - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@54.69.168.29 "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com && sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest"
+    - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$INSTANCE_IP "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com && sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest"
   only:
-    - ci-cd-runs-images-in-ec2-instance
+    - change-ssh-key-to-base64-and-replace-hardcoded-data-in-the-ci-cd-file-with-the-real
 
 
