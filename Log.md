@@ -136,3 +136,8 @@ in the Meta Data, because it was not set to html/text.
 ## Assignment 5 - BI-14 CI/CD builds docker images and upload them to the gitlab container registry.
 
 Tested a bunch of stuff locally to see how it works, used ChatGPT and the official Gitlab documentation. I couldn't figure out why I wasn't able to run ./dockerize.sh in the CI/CD environment, so I just did the scripts work manually. At first, I was unaware that the `CI_PROJECT_NAMESPACE` and `CI_PROJECT_NAME` were a thing, so I tried making a script which takes in the Url of the repository and converts it, but that turned out to be unnecessary. Something that will need to be done is to delete exiting containers if that's possible.
+
+## Assignment 5 - BI-20 Script which applies the terraform and replaces the CI/CD variables.
+
+To automate things even more, we thought to create a script which will run the terraform and will update the environment variables inside the CI/CD.
+All the code is done with the help of ChatGPT or self thought. Some look up of the gitlab documentation was done, but it did not help.
