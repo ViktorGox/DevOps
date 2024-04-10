@@ -42,7 +42,7 @@ terraform_apply:
     - terraform init
     - terraform apply --auto-approve
   only:
-    ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 build_web_frontend_dev:
   stage: frontend
