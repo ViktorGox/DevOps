@@ -34,7 +34,7 @@ test_backend:
     paths:
       - backend/build/reports/tests/
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 build_backend:
   stage: backend
@@ -46,7 +46,7 @@ build_backend:
     paths:
       - backend/build/libs/*.jar
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 setup_env_files:
   stage: setup
@@ -71,7 +71,7 @@ build_web_frontend_dev:
     paths:
       - frontend/build/web
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 build_web_frontend_prod:
   stage: frontend
