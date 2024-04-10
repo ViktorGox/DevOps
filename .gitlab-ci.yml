@@ -154,7 +154,6 @@ send_images_to_backend:
   stage: send_images
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
-    - echo "HERE x1"
     - apt-get update && apt-get install -y openssh-client
     - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
     - chmod 400 ssh_key.pem
@@ -167,7 +166,6 @@ send_images_to_backend:
     - echo "region = $AWS_REGION" >> ~/.aws/config
     - cat ~/.aws/credentials
     - cat ~/.aws/config
-    - echo "HERE"
     - ips=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text | grep -v "$DATABASE_IP")
     - echo "$ips"
     - for ip in $ips; do

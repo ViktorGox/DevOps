@@ -135,6 +135,7 @@ resource "aws_lb" "my_alb" {
   internal           = false
   load_balancer_type = "application"
   subnets            = [for subnet in aws_subnet.subnet : subnet.id]
+  security_groups = [aws_security_group.instance_sg.id]
 }
 
 resource "aws_lb_target_group" "my_target_group" {
@@ -219,24 +220,24 @@ resource "aws_autoscaling_group" "my_asg" {
 
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
-#resource "aws_s3_bucket" "bucket" {
-#  bucket = "devops-final-assignment-bobby-viktor"
-#}
+resource "aws_s3_bucket" "bucket" {
+  bucket = "devops-final-assignment-bobby-viktor"
+}
 #
-#resource "aws_s3_bucket_website_configuration" "bucket" {
-#  bucket = aws_s3_bucket.bucket.id
-#  index_document {
-#    suffix = "index.html"
-#  }
-#}
+resource "aws_s3_bucket_website_configuration" "bucket" {
+  bucket = aws_s3_bucket.bucket.id
+  index_document {
+    suffix = "index.html"
+  }
+}
 #
-#resource "aws_s3_bucket_public_access_block" "public_access_block" {
-#  bucket = aws_s3_bucket.bucket.id
-#  block_public_acls       = false
-#  block_public_policy     = false
-#  ignore_public_acls      = false
-#  restrict_public_buckets = false
-#}
+resource "aws_s3_bucket_public_access_block" "public_access_block" {
+  bucket = aws_s3_bucket.bucket.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
 #
 #resource "aws_s3_object" "upload_objects" {
 #  bucket = aws_s3_bucket.bucket.id
@@ -247,37 +248,33 @@ resource "aws_autoscaling_group" "my_asg" {
 #  etag   = filemd5("html/${each.value}")
 #  content_type  = "text/html"
 #}
-#resource "aws_s3_bucket_policy" "bucket_policy" {
-#  bucket = aws_s3_bucket.bucket.id
-#
-#  policy = jsonencode({
-#    Version = "2012-10-17"
-#    Statement = [
-#      {
-#        Effect    = "Allow"
-#        Principal = "*"
-#        Action = [
-#          "s3:GetObject"
-#        ]
-#        Resource = [
-#          "${aws_s3_bucket.bucket.arn}/*"
-#        ]
-#      }
-#    ]
-#  })
-#}
+resource "aws_s3_bucket_policy" "bucket_policy" {
+  bucket = aws_s3_bucket.bucket.id
 
-#output "instance_ip" {
-#  value = aws_instance.backend.public_ip
-#}
-#
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action = [
+          "s3:GetObject"
+        ]
+        Resource = [
+          "${aws_s3_bucket.bucket.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
 output "database_ip" {
   value = aws_instance.database.public_ip
 }
 
-#output "bucket_website_endpoint" {
-#  value = aws_s3_bucket_website_configuration.bucket.website_endpoint
-#}
+output "bucket_website_endpoint" {
+  value = aws_s3_bucket_website_configuration.bucket.website_endpoint
+}
 
 output "ssh_private_key" {
   value = tls_private_key.ssh_key.private_key_pem
