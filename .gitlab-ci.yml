@@ -152,7 +152,7 @@ set_up_bucket:
     - echo "aws_session_token=$AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-    - aws s3 cp index.html s3://devops-final-assignment-bobby-viktor-v-side-3/
+    - aws s3 cp index.html s3://gx-devops-assignment-8/
   only:
       - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
