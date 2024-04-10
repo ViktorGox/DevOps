@@ -37,6 +37,13 @@ resource "aws_security_group" "instance_sg" {
   }
 
   ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -85,23 +92,29 @@ resource "aws_key_pair" "ssh_key" {
   public_key = tls_private_key.ssh_key.public_key_openssh
 }
 
-
-resource "aws_instance" "instance_v2" {
+resource "aws_instance" "backend" {
   ami           = "ami-08116b9957a259459"
   instance_type = "t2.micro"
   key_name      = aws_key_pair.ssh_key.key_name
   subnet_id     = aws_subnet.subnet.id
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
-  user_data     = <<-EOF
-                  #!/bin/bash
-                  sudo apt update
-                  sudo apt install -y docker.io
-                  sudo systemctl start docker
-                  sudo systemctl enable docker
-                  EOF
+  user_data     = var.user_data_script
 
   tags = {
-    Name = "FinalAssignmentInstance"
+    Name = "BackendInstance"
+  }
+}
+
+resource "aws_instance" "database" {
+  ami           = "ami-08116b9957a259459"
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.ssh_key.key_name
+  subnet_id     = aws_subnet.subnet.id
+  vpc_security_group_ids = [aws_security_group.instance_sg.id]
+  user_data     = var.user_data_script
+
+  tags = {
+    Name = "DatabaseInstance"
   }
 }
 ### Created with the help of this website
@@ -155,7 +168,11 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 }
 
 output "instance_ip" {
-  value = aws_instance.instance_v2.public_ip
+  value = aws_instance.backend.public_ip
+}
+
+output "database_ip" {
+  value = aws_instance.database.public_ip
 }
 
 output "bucket_website_endpoint" {
