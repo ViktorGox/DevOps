@@ -178,7 +178,7 @@ send_images_to_backend:
       fi
       
       # Perform SSH login using SSH key (adapt username and path if different)
-      ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$ip << EOF
+      ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$ip &&
       # Commands to be executed on remote server via SSH
       echo "\$LOGIN_PASSWORD" | sudo docker login -u "\$LOGIN_USERNAME" --password-stdin registry.gitlab.com &&
       sudo docker rm -f \$(sudo docker ps -aq) || true && sudo docker rmi -f \$(sudo docker images -aq) || true &&
@@ -189,12 +189,6 @@ send_images_to_backend:
       -e DB_PASSWORD=password \
       -e DB_HOST=$DATABASE_IP \
       backend
-      EOF
-      
-      # Handle potential SSH errors (add error handling as needed)
-      if [[ $? -ne 0 ]]; then
-      echo "Error deploying to $ip via SSH"
-      fi
       done
   needs:
     - job: send_image_to_database
