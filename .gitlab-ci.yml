@@ -58,7 +58,7 @@ setup_env_files:
     - echo "SCHEME=$SCHEME" > dotenv_prod
     - echo "API_URL=$INSTANCE_IP" >> dotenv_prod
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 build_web_frontend_dev:
   stage: frontend
