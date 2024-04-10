@@ -152,7 +152,9 @@ send_image_to_database:
 
 send_images_to_backend:
   stage: send_images
-  image: amazon/aws-cli:2.7.9
+  image: ubuntu:latest
+  services:
+    amazon/aws-cli:latest
   script:
     - echo "HERE x1"
     - apt-get update && apt-get install -y openssh-client
