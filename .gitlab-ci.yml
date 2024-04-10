@@ -152,7 +152,7 @@ set_up_bucket:
     - cat ~/.aws/credentials
     - dir ~/.aws
     - cd infra
-    - aws s3 cp index.html s3://gx-devops-assignment-8/
+    - aws s3 cp index.html s3://devops-final-assignment-bobby-viktor-v-side-3/
   only:
       - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
