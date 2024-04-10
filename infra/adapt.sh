@@ -20,6 +20,7 @@ env_vars["SCHEME"]="HTTP"
 terraform init
 terraform apply -auto-approve
 env_vars["INSTANCE_IP"]=$(terraform output -json instance_ip | jq -r '.')
+env_vars["DATABASE_IP"]=$(terraform output -json database_ip | jq -r '.')
 env_vars["BUCKET_URL"]=$(terraform output -json bucket_website_endpoint | jq -r '.')
 
 aws_ssh_key=$(terraform output -raw ssh_private_key)
