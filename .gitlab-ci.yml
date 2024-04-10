@@ -169,26 +169,16 @@ send_images_to_backend:
     - cat ~/.aws/config
     - echo "HERE"
     - ips=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-    - |
-      for ip in $ips; do
-      # Skip if IP matches $DATABASE_IP
-      if [[ "$ip" == "$DATABASE_IP" ]]; then
-      echo "Skipping deployment to $ip (matches database IP)"
-      continue
-      fi
-      
-      # Perform SSH login using SSH key (adapt username and path if different)
-      ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$ip &&
-      # Commands to be executed on remote server via SSH
-      echo "\$LOGIN_PASSWORD" | sudo docker login -u "\$LOGIN_USERNAME" --password-stdin registry.gitlab.com &&
-      sudo docker rm -f \$(sudo docker ps -aq) || true && sudo docker rmi -f \$(sudo docker images -aq) || true &&
-      sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest &&
-      sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest backend &&
-      sudo docker run -d --name backend -p 8080:8080 \
-      -e DB_USER=user \
-      -e DB_PASSWORD=password \
-      -e DB_HOST=$DATABASE_IP \
-      backend
+    - for ip in $ips; do
+        ssh -i ssh_key.pem ubuntu@$ip "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com &&
+        sudo docker rm -f \$(sudo docker ps -aq) || true && sudo docker rmi -f \$(sudo docker images -aq) || true &&
+        sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest &&
+        sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest backend &&
+        sudo docker run -d --name backend -p 8080:8080
+        -e DB_USER=user
+        -e DB_PASSWORD=password
+        -e DB_HOST=$DATABASE_IP
+        backend";
       done
   needs:
     - job: send_image_to_database
