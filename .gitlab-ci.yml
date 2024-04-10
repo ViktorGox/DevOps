@@ -23,30 +23,6 @@ stages:
   - build_images
   - send_images
 
-test_backend:
-  stage: backend
-  <<: *backend_settings
-  script:
-    - cd backend
-    - gradle test
-  artifacts:
-    paths:
-      - backend/build/reports/tests/
-  only:
-    - ci-cd-builds-docker-images
-
-build_backend:
-  stage: backend
-  <<: *backend_settings
-  script:
-    - cd backend
-    - gradle build
-  artifacts:
-    paths:
-      - backend/build/libs/*.jar
-  only:
-    - ci-cd-builds-docker-images
-
 setup_env_files:
   stage: setup
   <<: *frontend_settings
@@ -116,6 +92,31 @@ build_android_app_prod:
   only:
     - ci-cd-builds-docker-images
 
+test_backend:
+  stage: backend
+  <<: *backend_settings
+  script:
+    - cd backend
+    - gradle test
+  artifacts:
+    paths:
+      - backend/build/reports/tests/
+  only:
+    - ci-cd-builds-docker-images
+
+build_backend:
+  stage: backend
+  <<: *backend_settings
+  script:
+    - cd backend
+    - gradle build
+  artifacts:
+    paths:
+      - backend/build/libs/*.jar
+  only:
+    - ci-cd-builds-docker-images
+
+
 create_docker_images:
   image: docker:24.0.5
   services:
@@ -155,7 +156,7 @@ set_up_bucket:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-    - aws s3 cp frontend/build/web s3://devops-final-assignment-bobby-viktor-v-side-3/ --recursive
+    - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://devops-final-assignment-bobby-viktor-v-side-3/ --recursive
   only:
       - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
   cache:
