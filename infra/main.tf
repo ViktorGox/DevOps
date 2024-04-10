@@ -177,6 +177,20 @@ resource "aws_launch_configuration" "my_lc" {
   }
 }
 
+resource "aws_autoscaling_policy" "cpu_scaling_policy" {
+  name                   = "cpu-scaling-policy"
+  policy_type            = "TargetTrackingScaling"
+  autoscaling_group_name = aws_autoscaling_group.my_asg.name
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 20
+  }
+}
+
+
 resource "aws_autoscaling_group" "my_asg" {
   name                      = "my-asg"
   max_size                  = 5
@@ -191,6 +205,14 @@ resource "aws_autoscaling_group" "my_asg" {
     key                 = "FinalAssingment"
     value               = "autoscaling-group"
     propagate_at_launch = true
+  }
+
+  target_group_arns = [aws_lb_target_group.my_target_group.arn]
+
+  termination_policies = ["Default"]
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
