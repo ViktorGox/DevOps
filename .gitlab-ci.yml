@@ -154,7 +154,7 @@ send_images_to_backend:
   stage: send_images
   image: ubuntu:latest
   script:
-    - apt-get update && apt-get install -y openssh-client && apt-get install awscli
+    - apt-get update && apt-get install -y openssh-client && apt-get install awscli -y
     - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
     - chmod 400 ssh_key.pem
     - mkdir -p ~/.aws
