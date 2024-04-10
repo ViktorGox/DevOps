@@ -34,7 +34,7 @@ test_backend:
     paths:
       - backend/build/reports/tests/
   only:
-    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
+    - ci-cd-builds-docker-images
 
 build_backend:
   stage: backend
@@ -46,7 +46,7 @@ build_backend:
     paths:
       - backend/build/libs/*.jar
   only:
-    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
+    - ci-cd-builds-docker-images
 
 setup_env_files:
   stage: setup
@@ -84,10 +84,10 @@ build_web_frontend_prod:
     paths:
       - frontend/build/web
   cache:
-    key: "$CI_COMMIT_REF_SLUG"
     paths:
       - frontend/dotenv_dev
       - frontend/dotenv_prod
+      - frontend/build/web
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
