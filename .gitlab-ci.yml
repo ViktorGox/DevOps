@@ -79,6 +79,7 @@ build_android_app_dev:
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
+
 build_android_app_prod:
   stage: frontend
   <<: *frontend_settings
