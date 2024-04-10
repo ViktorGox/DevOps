@@ -147,7 +147,7 @@ set_up_bucket:
     - mkdir -p ~/.aws
     - echo "$SINGLE_VARIABLE"
     - echo $SINGLE_VARIABLE > ~/.aws/credentials
-    - cat ./aws/credentials
+    - cat ./.aws/credentials
     - cd infra
     - aws s3 cp index.html s3://gx-devops-assignment-8/
   only:
