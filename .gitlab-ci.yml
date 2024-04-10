@@ -155,6 +155,8 @@ send_images_to_backend:
   image: ubuntu:latest
   script:
     - apt-get update && apt-get install -y openssh-client
+    - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
+    - chmod 400 ssh_key.pem
     - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$IP_INSTANCE \
       "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com &&
       sudo docker rm -f \$(sudo docker ps -aq) || true && sudo docker rmi -f \$(sudo docker images -aq) || true &&
