@@ -152,7 +152,7 @@ send_image_to_database:
 
 send_images_to_backend:
   stage: send_images
-  image: aws-base:latest
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
     - echo "HERE x1"
     - apt-get update && apt-get install -y openssh-client
