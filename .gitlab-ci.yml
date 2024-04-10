@@ -165,7 +165,7 @@ send_images_to_backend:
       -e DB_HOST=$DATABASE_IP
       backend"
   needs:
-    - job: send_image_to_backend
+    - job: send_image_to_database
       artifacts: true
   only:
     - separate-instance-database-used-by-ci-cd
