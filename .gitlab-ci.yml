@@ -77,7 +77,7 @@ build_android_app_dev:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 build_android_app_prod:
   stage: frontend
@@ -90,7 +90,7 @@ build_android_app_prod:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 test_backend:
   stage: backend
@@ -102,7 +102,7 @@ test_backend:
     paths:
       - backend/build/reports/tests/
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 build_backend:
   stage: backend
@@ -114,7 +114,7 @@ build_backend:
     paths:
       - backend/build/libs/*.jar
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 
 create_docker_images:
@@ -132,7 +132,7 @@ create_docker_images:
         docker push "$image"
       done
   only:
-    - ci-cd-builds-docker-images
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 send_image_to_database:
   stage: send_images
@@ -153,7 +153,7 @@ send_image_to_database:
       -e MYSQL_DATABASE=playlist
       database"
   only:
-    - backend-to-use-load-balancer-and-autoscaling-group
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 send_images_to_backend:
   stage: send_images
@@ -188,7 +188,7 @@ send_images_to_backend:
     - job: send_image_to_database
       artifacts: true
   only:
-    - change-ssh-key-to-base64-and-replace-hardcoded-data-in-the-ci-cd-file-with-the-real
+    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 set_up_bucket:
   stage: send_images
