@@ -35,6 +35,15 @@ setup_env_files:
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
+terraform_apply:
+  stage: setup
+  script:
+    - cd infra
+    - terraform init
+    - terraform apply --auto-approve
+  only:
+    ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
+
 build_web_frontend_dev:
   stage: frontend
   <<: *frontend_settings
