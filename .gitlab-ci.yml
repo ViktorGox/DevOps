@@ -36,6 +36,7 @@ setup_env_files:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
 terraform_apply:
+  image: hashicorp/terraform:latest
   stage: setup
   script:
     - cd infra
