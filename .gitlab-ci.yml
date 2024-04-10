@@ -84,8 +84,10 @@ build_web_frontend_prod:
     paths:
       - frontend/build/web
   cache:
+    key: "$CI_COMMIT_REF_SLUG"
     paths:
-      - frontend/build/web
+      - frontend/dotenv_dev
+      - frontend/dotenv_prod
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
