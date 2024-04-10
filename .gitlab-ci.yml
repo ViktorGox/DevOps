@@ -163,7 +163,10 @@ send_images_to_backend:
     - echo "aws_access_key_id=$BOBBY_ACCESS_KEY" >> ~/.aws/credentials
     - echo "aws_secret_access_key=$BOBBY_SECRET_KEY" >> ~/.aws/credentials
     - echo "aws_session_token=$BOBBY_SESSION_TOKEN" >> ~/.aws/credentials
+    - echo "[default]" > ~/.aws/config
+    - echo "region = us-west-2" >> ~/.aws/config
     - cat ~/.aws/credentials
+    - cat ~/.aws/config
     - echo "HERE"
     - aws ec2 describe-instances --query 'Reservations[*].Instances[*].[PublicIpAddress]' --output text
     - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@34.220.13.153 \
