@@ -144,7 +144,6 @@ send_images:
       sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest && 
       sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest backend && 
       sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest database &&
-      sudo docker network rm my_network &&
       sudo docker network create my_network && 
       sudo docker run -d --name database -p 3306:3306 --network my_network 
       -e MYSQL_ROOT_PASSWORD=root_password 
