@@ -152,7 +152,7 @@ send_image_to_database:
 
 send_images_to_backend:
   stage: send_images
-  image: amazon/aws-cli
+  image: amazon/aws-cli:2.7.9
   script:
     - apt-get update && apt-get install -y openssh-client
     - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
