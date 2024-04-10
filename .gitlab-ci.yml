@@ -12,7 +12,6 @@
 .frontend_settings: &frontend_settings
   image: ghcr.io/cirruslabs/flutter
   cache:
-    key: "$CI_COMMIT_REF_SLUG"
     paths:
       - frontend/dotenv_dev
       - frontend/dotenv_prod
