@@ -44,7 +44,7 @@ run_terraform:
     - cd infra
     - chmod +x adapt.sh
     - echo "$P_ACCESS_KEY"
-    - ./adapt.sh
+    - ./adapt.sh $P_ACCESS_KEY
   only:
     - terraform-is-also-executed-in-the-ci-cd
 
