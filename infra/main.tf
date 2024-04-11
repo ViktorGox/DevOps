@@ -280,3 +280,7 @@ output "ssh_private_key" {
   value = tls_private_key.ssh_key.private_key_pem
   sensitive = true
 }
+
+output "load_balancer_dns" {
+  value = aws_lb.my_alb.dns_name
+}
