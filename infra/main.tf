@@ -85,6 +85,7 @@ resource "aws_route_table" "route_table" {
   }
 }
 
+
 resource "aws_route_table_association" "example" {
   for_each = aws_subnet.subnet
 
@@ -116,19 +117,6 @@ resource "aws_key_pair" "ssh_key" {
 #    Name = "BackendInstance"
 #  }
 #}
-
-resource "aws_instance" "database" {
-  ami           = "ami-08116b9957a259459"
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.ssh_key.key_name
-  subnet_id     = aws_subnet.subnet["subnet1"].id
-  vpc_security_group_ids = [aws_security_group.instance_sg.id]
-  user_data     = var.user_data_script
-
-  tags = {
-    Name = "DatabaseInstance"
-  }
-}
 
 resource "aws_lb" "my_alb" {
   name               = "my-alb"
@@ -245,7 +233,7 @@ resource "aws_db_instance" "playlist" {
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
 resource "aws_s3_bucket" "bucket" {
-  bucket = "devops-final-assignment-bobby-viktor"
+  bucket = "devops-final-assignment-bobby-viktor-v-side-4"
 }
 #
 resource "aws_s3_bucket_website_configuration" "bucket" {
@@ -303,6 +291,10 @@ output "bucket_website_endpoint" {
 output "ssh_private_key" {
   value = tls_private_key.ssh_key.private_key_pem
   sensitive = true
+}
+
+output "load_balancer_dns" {
+  value = aws_lb.my_alb.dns_name
 }
 
 output "rds_endpoint" {
