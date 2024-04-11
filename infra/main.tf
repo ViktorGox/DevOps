@@ -117,18 +117,18 @@ resource "aws_key_pair" "ssh_key" {
 #  }
 #}
 
-resource "aws_instance" "database" {
-  ami           = "ami-08116b9957a259459"
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.ssh_key.key_name
-  subnet_id     = aws_subnet.subnet["subnet1"].id
-  vpc_security_group_ids = [aws_security_group.instance_sg.id]
-  user_data     = var.user_data_script
-
-  tags = {
-    Name = "DatabaseInstance"
-  }
-}
+#resource "aws_instance" "database" {
+#  ami           = "ami-08116b9957a259459"
+#  instance_type = "t2.micro"
+#  key_name      = aws_key_pair.ssh_key.key_name
+#  subnet_id     = aws_subnet.subnet["subnet1"].id
+#  vpc_security_group_ids = [aws_security_group.instance_sg.id]
+##  user_data = file("${path.module}/user_data_script.sh")
+#
+#  tags = {
+#    Name = "DatabaseInstance"
+#  }
+#}
 
 resource "aws_lb" "my_alb" {
   name               = "my-alb"
@@ -166,13 +166,12 @@ resource "aws_lb_listener" "my_listener" {
   }
 }
 
-resource "aws_launch_configuration" "my_lc" {
-  name                 = "my-lc"
+resource "aws_launch_template" "my_lt" {
+  name_prefix          = "my-lt"
   image_id             = "ami-08116b9957a259459"
   instance_type        = "t2.micro"
   key_name             = aws_key_pair.ssh_key.key_name
-  security_groups      = [aws_security_group.instance_sg.id]
-  user_data            = var.user_data_script
+  user_data = file("${path.module}/user_data_script.sh")
   lifecycle {
     create_before_destroy = true
   }
@@ -193,12 +192,15 @@ resource "aws_autoscaling_policy" "cpu_scaling_policy" {
 
 
 resource "aws_autoscaling_group" "my_asg" {
-  name                      = "my-asg"
+  name                      = "my-asg_v2"
   max_size                  = 5
   min_size                  = 2
   desired_capacity          = 2
   vpc_zone_identifier       = [for subnet in aws_subnet.subnet : subnet.id]
-  launch_configuration      = aws_launch_configuration.my_lc.name
+  launch_template {
+    id                        = aws_launch_template.my_lt.id
+    version                   = aws_launch_template.my_lt.latest_version
+  }
   health_check_type         = "ELB"
   health_check_grace_period = 300
 
