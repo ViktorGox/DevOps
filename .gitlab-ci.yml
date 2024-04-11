@@ -80,7 +80,6 @@ build_android_app_dev:
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
-
 build_android_app_prod:
   stage: frontend
   <<: *frontend_settings
@@ -136,26 +135,26 @@ create_docker_images:
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
-send_image_to_database:
-  stage: send_images
-  image: ubuntu:latest
-  script:
-    - apt-get update && apt-get install -y openssh-client
-    - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
-    - chmod 400 ssh_key.pem
-    - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$DATABASE_IP \
-      "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com &&
-      sudo docker rm -f \$(sudo docker ps -aq) || true && sudo docker rmi -f \$(sudo docker images -aq) || true &&
-      sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest &&
-      sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest database &&
-      sudo docker run -d --name database -p 3306:3306
-      -e MYSQL_ROOT_PASSWORD=root_password
-      -e MYSQL_USER=user
-      -e MYSQL_PASSWORD=password
-      -e MYSQL_DATABASE=playlist
-      database"
-  only:
-    - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
+#send_image_to_database:
+#  stage: send_images
+#  image: ubuntu:latest
+#  script:
+#    - apt-get update && apt-get install -y openssh-client
+#    - base64 -d <<< "$AWS_SSH_KEY" > ssh_key.pem
+#    - chmod 400 ssh_key.pem
+#    - ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$DATABASE_IP \
+#      "echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com &&
+#      sudo docker rm -f \$(sudo docker ps -aq) || true && sudo docker rmi -f \$(sudo docker images -aq) || true &&
+#      sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest &&
+#      sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/database:latest database &&
+#      sudo docker run -d --name database -p 3306:3306
+#      -e MYSQL_ROOT_PASSWORD=root_password
+#      -e MYSQL_USER=user
+#      -e MYSQL_PASSWORD=password
+#      -e MYSQL_DATABASE=playlist
+#      database"
+#  only:
+#    - create-rds-for-database
 
 send_images_to_backend:
   stage: send_images
@@ -186,9 +185,6 @@ send_images_to_backend:
       -e DB_HOST=$DATABASE_IP
       backend";
       done
-  needs:
-    - job: send_image_to_database
-      artifacts: true
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 

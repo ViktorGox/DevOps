@@ -217,6 +217,30 @@ resource "aws_autoscaling_group" "my_asg" {
   }
 }
 
+### RDS
+resource "aws_db_subnet_group" "default" {
+  name       = "main"
+  subnet_ids = [for subnet in aws_subnet.subnet : subnet.id]
+
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
+resource "aws_db_instance" "playlist" {
+  allocated_storage    = 5
+  db_name              = "playlist"
+  engine               = "mariadb"
+  engine_version       = "10.11.6"
+  instance_class       = "db.t3.micro"
+  username             = "user"
+  password             = "password"
+  parameter_group_name = "default.mariadb10.11"
+  skip_final_snapshot  = true
+
+  db_subnet_group_name = aws_db_subnet_group.default.name
+  vpc_security_group_ids = [aws_security_group.instance_sg.id]
+}
+
 
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
@@ -269,7 +293,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 }
 
 output "database_ip" {
-  value = aws_instance.database.public_ip
+  value = aws_db_instance.playlist.address
 }
 
 output "bucket_website_endpoint" {
@@ -283,4 +307,8 @@ output "ssh_private_key" {
 
 output "load_balancer_dns" {
   value = aws_lb.my_alb.dns_name
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.playlist.endpoint
 }
