@@ -1,3 +1,6 @@
+variables:
+  TF_VERSION: "0.14.9"
+
 .backend_settings: &backend_settings
   image: gradle:jdk17
   services:
@@ -27,7 +30,7 @@ run_terraform:
   stage: setup
   image: ubuntu:latest
   script:
-    - apk add --no-cache curl jq
+    - apt-get update && apt-get install -y curl jq
     - curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
     - unzip /tmp/terraform.zip -d /usr/local/bin/
     - chmod +x /usr/local/bin/terraform
