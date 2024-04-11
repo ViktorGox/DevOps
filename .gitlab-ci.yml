@@ -23,6 +23,7 @@ stages:
   - build_images
   - send_images
 
+
 setup_env_files:
   stage: setup
   <<: *frontend_settings
