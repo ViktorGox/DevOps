@@ -42,6 +42,7 @@ run_terraform:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
+    - chmod +x adapt.sh
     - echo "$P_ACCESS_KEY"
     - ./adapt.sh
   only:
