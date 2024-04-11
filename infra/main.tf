@@ -219,7 +219,7 @@ resource "aws_autoscaling_group" "my_asg" {
 
 ### RDS
 resource "aws_db_instance" "playlist" {
-  allocated_storage    = 1
+  allocated_storage    = 5
   db_name              = "playlist"
   engine               = "mariadb"
   engine_version       = "10.11.6"
@@ -228,6 +228,9 @@ resource "aws_db_instance" "playlist" {
   password             = "password"
   parameter_group_name = "default.mariadb10.11"
   skip_final_snapshot  = true
+
+  # Make the RDS instance publicly accessible
+  publicly_accessible = true
 }
 
 
