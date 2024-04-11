@@ -179,8 +179,5 @@ send_images_to_backend:
         -e DB_HOST=$DATABASE_IP
         backend";
       done
-  needs:
-    - job: send_image_to_database
-      artifacts: true
   only:
     - create-rds-for-database
