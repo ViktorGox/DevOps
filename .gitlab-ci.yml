@@ -183,4 +183,4 @@ send_images_to_backend:
     - job: send_image_to_database
       artifacts: true
   only:
-    - backend-to-use-load-balancer-and-autoscaling-group
+    - create-rds-for-database

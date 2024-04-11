@@ -218,6 +218,14 @@ resource "aws_autoscaling_group" "my_asg" {
 }
 
 ### RDS
+resource "aws_db_subnet_group" "default" {
+  name       = "main"
+  subnet_ids = [for subnet in aws_subnet.subnet : subnet.id]
+
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
 resource "aws_db_instance" "playlist" {
   allocated_storage    = 5
   db_name              = "playlist"
@@ -229,8 +237,8 @@ resource "aws_db_instance" "playlist" {
   parameter_group_name = "default.mariadb10.11"
   skip_final_snapshot  = true
 
-  # Make the RDS instance publicly accessible
-  publicly_accessible = true
+  db_subnet_group_name = aws_db_subnet_group.default.name
+  vpc_security_group_ids = [aws_security_group.instance_sg.id]
 }
 
 
@@ -285,7 +293,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 }
 
 output "database_ip" {
-  value = aws_instance.database.public_ip
+  value = aws_db_instance.playlist.address
 }
 
 output "bucket_website_endpoint" {
