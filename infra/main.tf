@@ -117,19 +117,6 @@ resource "aws_key_pair" "ssh_key" {
 #  }
 #}
 
-resource "aws_instance" "database" {
-  ami           = "ami-08116b9957a259459"
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.ssh_key.key_name
-  subnet_id     = aws_subnet.subnet["subnet1"].id
-  vpc_security_group_ids = [aws_security_group.instance_sg.id]
-  user_data     = var.user_data_script
-
-  tags = {
-    Name = "DatabaseInstance"
-  }
-}
-
 resource "aws_lb" "my_alb" {
   name               = "my-alb"
   internal           = false
