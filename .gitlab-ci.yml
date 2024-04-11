@@ -23,6 +23,17 @@ stages:
   - build_images
   - send_images
 
+run_terraform:
+  stage: setup
+  image: ubuntu:latest
+  script:
+    - apk add --no-cache curl jq
+    - curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+    - unzip /tmp/terraform.zip -d /usr/local/bin/
+    - chmod +x /usr/local/bin/terraform
+    - terraform --version
+  only:
+    - terraform-is-also-executed-in-the-ci-cd
 
 setup_env_files:
   stage: setup
