@@ -29,9 +29,9 @@ setup_env_files:
   script:
     - cd frontend
     - echo "SCHEME=$SCHEME" > dotenv_dev
-    - echo "API_URL=$INSTANCE_IP" >> dotenv_dev
+    - echo "API_URL=$DATABASE_IP" >> dotenv_dev
     - echo "SCHEME=$SCHEME" > dotenv_prod
-    - echo "API_URL=$INSTANCE_IP" >> dotenv_prod
+    - echo "API_URL=$DATABASE_IP" >> dotenv_prod
   only:
     - ci-cd-uploads-frontend-web-files-as-static-website-in-aws-s3-bucket
 
