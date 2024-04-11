@@ -43,7 +43,7 @@ run_terraform:
     - cat ~/.aws/credentials
     - cd infra
     - echo "$P_ACCESS_KEY"
-    - ./adapt.sh $P_ACCESS_KEY
+    - ./adapt.sh
   only:
     - terraform-is-also-executed-in-the-ci-cd
 
