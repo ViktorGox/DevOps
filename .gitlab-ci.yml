@@ -1,5 +1,5 @@
 variables:
-  TF_VERSION: "0.14.9"
+  TF_VERSION: "1.7.5"
 
 .backend_settings: &backend_settings
   image: gradle:jdk17
