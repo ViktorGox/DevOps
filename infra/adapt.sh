@@ -15,7 +15,7 @@ TOKEN=$1
 
 declare -A env_vars
 
-env_vars["SCHEME"]="HTTP"
+env_vars["SCHEME"]="http"
 
 terraform init
 terraform apply -auto-approve
