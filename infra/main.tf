@@ -217,6 +217,19 @@ resource "aws_autoscaling_group" "my_asg" {
   }
 }
 
+### RDS
+resource "aws_db_instance" "playlist" {
+  allocated_storage    = 1
+  db_name              = "playlist"
+  engine               = "mariadb"
+  engine_version       = "10.11.6"
+  instance_class       = "db.t3.micro"
+  username             = "user"
+  password             = "password"
+  parameter_group_name = "default.mariadb10.11"
+  skip_final_snapshot  = true
+}
+
 
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
@@ -279,4 +292,8 @@ output "bucket_website_endpoint" {
 output "ssh_private_key" {
   value = tls_private_key.ssh_key.private_key_pem
   sensitive = true
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.playlist.endpoint
 }
