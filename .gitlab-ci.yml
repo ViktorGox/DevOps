@@ -30,31 +30,28 @@ run_terraform:
   stage: setup
   image: ubuntu:latest
   script:
-#    - echo "Snitches get the stitches" > file.txt
-    - cat file.txt
-#    - apt-get update && apt-get install -y curl jq unzip
-#    - curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-#    - unzip /tmp/terraform.zip -d /usr/local/bin/
-#    - chmod +x /usr/local/bin/terraform
-#    - terraform --version
-#    - mkdir -p ~/.aws
-#    - echo "[default]" > ~/.aws/credentials
-#    - echo "aws_access_key_id=$MY_AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
-#    - echo "aws_secret_access_key=$MY_AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
-#    - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
-#    - cat ~/.aws/credentials
-#    - cd infra
-#    - chmod +x adapt.sh
-#    - echo "$P_ACCESS_KEY"
-#    - ./adapt.sh $P_ACCESS_KEY
-#    - terraform destroy -auto-approve
+    - apt-get update && apt-get install -y curl jq unzip
+    - curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+    - unzip /tmp/terraform.zip -d /usr/local/bin/
+    - chmod +x /usr/local/bin/terraform
+    - terraform --version
+    - mkdir -p ~/.aws
+    - echo "[default]" > ~/.aws/credentials
+    - echo "aws_access_key_id=$MY_AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+    - echo "aws_secret_access_key=$MY_AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+    - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
+    - cat ~/.aws/credentials
+    - cd infra
+    - chmod +x adapt.sh
+    - echo "$P_ACCESS_KEY"
+    - ./adapt.sh $P_ACCESS_KEY
+    - terraform destroy -auto-approve
   cache:
     key: "terraform-cache"
     paths:
-      - file.txt
-#      - .terraform/
-#      - terraform.tfstate
-#      - terraform.tfstate.backup
+      - .terraform/
+      - terraform.tfstate
+      - terraform.tfstate.backup
   only:
     - terraform-is-also-executed-in-the-ci-cd
 
