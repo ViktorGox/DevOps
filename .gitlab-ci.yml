@@ -43,7 +43,8 @@ run_terraform:
     - cat ~/.aws/credentials
     - cd infra
     - chmod +x adapt.sh
-    - ./adapt.sh $P_ACCESS_KEY
+    - terraform destroy -auto-approve
+#    - ./adapt.sh $P_ACCESS_KEY
     - echo $(ls)
   cache:
     key: "terraform-cache"
