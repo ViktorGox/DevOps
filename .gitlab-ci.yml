@@ -46,14 +46,10 @@ run_terraform:
     - chmod +x adapt.sh
     - ./adapt.sh $P_ACCESS_KEY
     - echo $(ls)
-#  cache:
-#    key: "terraform-cache"
-#    paths:
-#      - file.txt
-#      - file2.txt
-#      - .terraform/
-#      - terraform.tfstate
-#      - terraform.tfstate.backup
+  cache:
+    key: "terraform-cache"
+    paths:
+      - infra/
 #  artifacts:
 #    paths:
 #      - infra/
