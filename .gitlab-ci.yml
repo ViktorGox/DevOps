@@ -30,7 +30,6 @@ run_terraform:
   stage: setup
   image: ubuntu:latest
   script:
-    - chmod +x test.sh
     - echo "Snitches get the stitches" > file.txt
     - cat file.txt
 #    - apt-get update && apt-get install -y curl jq unzip
