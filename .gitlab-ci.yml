@@ -209,7 +209,7 @@ set_up_bucket:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-    - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://devops-final-assignment-bobby-viktor-v-side-4/ --recursive
+    - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://$BUCKET_URL/ --recursive
   only:
     - launch-template-downloads-backend-image-from-the-start
   cache:
