@@ -30,6 +30,7 @@ run_terraform:
   stage: setup
   image: ubuntu:latest
   script:
+    - echo "???" >> terraform.tfstate
     - cat file.txt
     - cat file2.txt
     - apt-get update && apt-get install -y curl jq unzip
