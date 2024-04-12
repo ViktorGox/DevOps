@@ -45,10 +45,10 @@ run_terraform:
     - chmod +x adapt.sh
     - ./adapt.sh $P_ACCESS_KEY
     - echo $(ls)
-  cache:
-    key: "terraform-cache"
-    paths:
-      - $CI_PROJECT_DIR/infra/
+#  cache:
+#    key: "terraform-cache"
+#    paths:
+#      - $CI_PROJECT_DIR/infra/
   artifacts:
     paths:
       - $CI_PROJECT_DIR/infra/
