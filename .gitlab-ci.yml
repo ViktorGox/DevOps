@@ -30,9 +30,7 @@ run_terraform:
   stage: setup
   image: ubuntu:latest
   script:
-    - echo "Snitches get the stitches 2" > file.txt
     - cat file.txt
-    - echo "Snitches get the stitches 55" > file2.txt
     - cat file2.txt
     - apt-get update && apt-get install -y curl jq unzip
     - curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
