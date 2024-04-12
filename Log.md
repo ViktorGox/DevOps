@@ -142,6 +142,23 @@ Tested a bunch of stuff locally to see how it works, used ChatGPT and the offici
 To automate things even more, we thought to create a script which will run the terraform and will update the environment variables inside the CI/CD.
 All the code is done with the help of ChatGPT or self thought. Some look up of the gitlab documentation was done, but it did not help.
 
+
+## Assignment 5 - BI-15 CI/CD uploads the images from the registry to the EC2
+Honestly this task took some time. First of all I had problems with the SSH key we were creating. That's why I created the output for terraform
+and also why I added the ssh key to be created from terraform so it wouldn't require for it to be stored locally. This also meant
+that the SSH key should somehow be uplaoded to the CI/CD variables. Because of the script that Viktor made that was easy. The problem was that
+for some reason it didn't want to accept the ssh key when the ssh connection was being made. That's when I decided to just use
+base 64 encoding after some research.
+
+## Assignment 6 -  BI-23 Make the backend to use a load balancer and an autoscaling group
+This was a pain, because this meant that for the CI/CD to be able to upload the images, it meant that it had to connect to
+all of the instances from the load balancer. In order to do this we needed the ip addresses of every instance. I tried getting them from
+terraform but terraform doesn't have an already made function for that (a little bit stupid if you ask me). After wasting my time on
+trying to do it through terraform I decided to try through CI/CD. First I tried running commands locally to get the ip's of the running
+instance. I couldn't make it work until I found a command from stackoverflow which worked. After Vitkor had already struggled with aws
+configuration I was able to set it up easily. But my problem was that I needed an image with Ubuntu and aws, after a long time of searching
+Viktor gave me an image from gitlab which worked perfectly.
+
 ## Assignment 6 - BI-16 CI/CD uploads frontend web files as static website in AWS S3 bucket
 
 Tried a bunch of stuff once again. Found the base image in the gitlab documentation. Had issues with setting the aws credentials, and honestly I am not sure what changed to make it work, but it works.
@@ -149,3 +166,19 @@ Tried a bunch of stuff once again. Found the base image in the gitlab documentat
 ## Assignment 6 - BI-16 CI/CD uploads frontend web files as static website in AWS S3 bucket
 
 Tried a bunch of stuff once again. Found the base image in the gitlab documentation. Had issues with setting the aws credentials, and honestly I am not sure what changed to make it work, but it works.
+
+## Assignment 6 BI-24 Create RDS for the database
+
+This was not that much of a pain to create. At first ChatGPT gave me deprecated code, so I started looking on my own. At first
+I had problems with selecting a version for MariaDB because it gave me an error that it couldn't find it. Eventually I just
+created an RDS manually just to see what is needed and what version I can use. After figuring all of these stuff out I created our
+first RDS. At first it was publicly accessible but eventually I was able to change the code in terraform and make it run
+on the VPC we are using for our infrastructure.
+
+## Assignment 6 BI-27 Create a launch template which downloads the backend image from the start
+
+We had one problem in our infrastructure which was the following one: What would happen if a new instance is created by the
+autoscaling group? Well the answer to that question is, nothing, literally. In other words, the instance is going to be empty and
+only have docker installed but it won't have the backend, so we decided ot make a launch template for instances. I wasn't able to
+make a launch template because it always gave me weird errors. That's why we created a launch configuration because somehow it
+worked.
