@@ -172,6 +172,7 @@ seed_database:
   image: ubuntu:latest
   stage: aws_population
   script:
+    - apt-get update && apt-get install -y curl
     - cd seed-application
     - ./add_tracks.sh
   only:
