@@ -141,3 +141,11 @@ Tested a bunch of stuff locally to see how it works, used ChatGPT and the offici
 
 To automate things even more, we thought to create a script which will run the terraform and will update the environment variables inside the CI/CD.
 All the code is done with the help of ChatGPT or self thought. Some look up of the gitlab documentation was done, but it did not help.
+
+## Assignment 6 - BI-16 CI/CD uploads frontend web files as static website in AWS S3 bucket
+
+Tried a bunch of stuff once again. Found the base image in the gitlab documentation. Had issues with setting the aws credentials, and honestly I am not sure what changed to make it work, but it works.
+
+## Assignment 6 - BI-16 CI/CD uploads frontend web files as static website in AWS S3 bucket
+
+Tried a bunch of stuff once again. Found the base image in the gitlab documentation. Had issues with setting the aws credentials, and honestly I am not sure what changed to make it work, but it works.

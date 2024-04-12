@@ -145,12 +145,12 @@ resource "aws_lb_target_group" "my_target_group" {
   vpc_id   = aws_vpc.vpc.id
 
   health_check {
-    path                = "/"
+    path                = "/api/songs"
     protocol            = "HTTP"
-    interval            = 30
-    timeout             = 10
+    interval            = 61
+    timeout             = 60
     healthy_threshold   = 2
-    unhealthy_threshold = 2
+    unhealthy_threshold = 4
     matcher             = "200-299"
   }
 }
@@ -171,10 +171,11 @@ data "template_file" "user_data_script" {
 }
 
 resource "aws_launch_configuration" "my_lc" {
-  name_prefix          = "my-lt"
+  name                 = "my-lc"
   image_id             = "ami-08116b9957a259459"
   instance_type        = "t2.micro"
   key_name             = aws_key_pair.ssh_key.key_name
+  security_groups      = [aws_security_group.instance_sg.id]
   user_data = data.template_file.user_data_script.rendered
   lifecycle {
     create_before_destroy = true
@@ -196,7 +197,7 @@ resource "aws_autoscaling_policy" "cpu_scaling_policy" {
 
 
 resource "aws_autoscaling_group" "my_asg" {
-  name                      = "my-asg_v2"
+  name                      = "my-asg"
   max_size                  = 5
   min_size                  = 2
   desired_capacity          = 2
@@ -306,6 +307,10 @@ output "bucket_website_endpoint" {
 output "ssh_private_key" {
   value = tls_private_key.ssh_key.private_key_pem
   sensitive = true
+}
+
+output "load_balancer_dns" {
+  value = aws_lb.my_alb.dns_name
 }
 
 output "rds_endpoint" {

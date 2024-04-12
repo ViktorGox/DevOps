@@ -15,11 +15,14 @@ TOKEN=$1
 
 declare -A env_vars
 
-env_vars["SCHEME"]="HTTP"
+env_vars["SCHEME"]="http"
 
 terraform init
+
+terraform apply -auto-approve
 terraform apply -auto-approve
 env_vars["DATABASE_IP"]=$(terraform output -json database_ip | jq -r '.')
+env_vars["LB_DNS"]=$(terraform output -json load_balancer_dns | jq -r '.')
 env_vars["BUCKET_URL"]=$(terraform output -json bucket_website_endpoint | jq -r '.')
 
 aws_ssh_key=$(terraform output -raw ssh_private_key)
