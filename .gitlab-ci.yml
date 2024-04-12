@@ -47,7 +47,7 @@ run_terraform:
 #    - terraform destroy -auto-approve
     - ./adapt.sh $P_ACCESS_KEY
   cache:
-    key: "terraform-cache-new-2"
+    key: "terraform-cache-1"
     paths:
       - $CI_PROJECT_DIR/infra/terraform.tfstate
   artifacts:
