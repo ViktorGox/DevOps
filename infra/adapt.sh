@@ -17,7 +17,7 @@ declare -A env_vars
 
 env_vars["SCHEME"]="http"
 
-terraform init
+#terraform init
 echo $(ls)
 terraform apply -auto-approve
 #env_vars["DATABASE_IP"]=$(terraform output -json database_ip | jq -r '.')
