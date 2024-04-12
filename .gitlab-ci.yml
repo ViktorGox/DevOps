@@ -43,6 +43,7 @@ run_terraform:
     - cat ~/.aws/credentials
     - cd infra
     - chmod +x adapt.sh
+    - terraform init
     - terraform destroy -auto-approve
 #    - ./adapt.sh $P_ACCESS_KEY
     - echo $(ls)
