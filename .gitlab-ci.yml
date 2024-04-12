@@ -50,9 +50,9 @@ run_terraform:
     key: "terraform-cache"
     paths:
       - infra/
-#  artifacts:
-#    paths:
-#      - infra/
+  artifacts:
+    paths:
+      - infra/
   only:
     - terraform-is-also-executed-in-the-ci-cd
 
