@@ -30,6 +30,8 @@ run_terraform:
   stage: setup
   image: ubuntu:latest
   script:
+    - echo "Snitches get the stitches" > file.txt
+    - cat file.txt
     - apt-get update && apt-get install -y curl jq unzip
     - curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
     - unzip /tmp/terraform.zip -d /usr/local/bin/
@@ -43,12 +45,12 @@ run_terraform:
     - cat ~/.aws/credentials
     - cd infra
     - chmod +x adapt.sh
-    - echo "$P_ACCESS_KEY"
     - ./adapt.sh $P_ACCESS_KEY
     - echo $(ls)
   cache:
     key: "terraform-cache"
     paths:
+      - file.txt
       - .terraform/
       - terraform.tfstate
       - terraform.tfstate.backup
