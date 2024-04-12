@@ -51,7 +51,7 @@ run_terraform:
 #      - $CI_PROJECT_DIR/infra/
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/infra/
+      - $CI_PROJECT_DIR/infra/terraform.tfstate
   only:
     - terraform-is-also-executed-in-the-ci-cd
 
