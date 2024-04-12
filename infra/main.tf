@@ -75,7 +75,7 @@ resource "aws_subnet" "subnet" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 }
-
+#
 resource "aws_route_table" "route_table" {
   vpc_id = aws_vpc.vpc.id
 
@@ -135,10 +135,10 @@ resource "aws_lb_target_group" "my_target_group" {
   health_check {
     path                = "/"
     protocol            = "HTTP"
-    interval            = 30
-    timeout             = 10
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
+    interval            = 60
+    timeout             = 30
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
     matcher             = "200-299"
   }
 }
@@ -188,7 +188,7 @@ resource "aws_autoscaling_group" "my_asg" {
   vpc_zone_identifier       = [for subnet in aws_subnet.subnet : subnet.id]
   launch_configuration      = aws_launch_configuration.my_lc.name
   health_check_type         = "ELB"
-  health_check_grace_period = 300
+  health_check_grace_period = 600
 
   tag {
     key                 = "FinalAssingment"
