@@ -30,6 +30,7 @@ run_terraform:
   stage: setup
   image: ubuntu:latest
   script:
+    - echo " " > $CI_PROJECT_DIR/infra/terraform.tfstate
     - apt-get update && apt-get install -y curl jq unzip
     - curl -o /tmp/terraform.zip -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
     - unzip /tmp/terraform.zip -d /usr/local/bin/
