@@ -23,7 +23,7 @@ stages:
   - setup
   - frontend
   - backend
-  - build_images
+  - aws_population
   - send_images
 
 run_terraform:
@@ -154,7 +154,7 @@ create_docker_images:
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
-  stage: build_images
+  stage: aws_population
   script:
     - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
     - docker-compose build
@@ -164,6 +164,15 @@ create_docker_images:
       for image in $images; do
         docker push "$image"
       done
+  only:
+    - the-database-is-seeded-during-ci-cd-as-well
+
+seed_database:
+  image: ubuntu:latest
+  stage: aws_population
+  script:
+    - cd seed-application
+    - ./add_tracks.sh
   only:
     - the-database-is-seeded-during-ci-cd-as-well
 
