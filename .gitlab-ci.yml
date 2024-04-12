@@ -57,9 +57,7 @@ run_terraform:
       - terraform.tfstate.backup
   artifacts:
     paths:
-      - .terraform/
-      - terraform.tfstate
-      - terraform.tfstate.backup
+      - infra/
   only:
     - terraform-is-also-executed-in-the-ci-cd
 
