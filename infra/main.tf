@@ -108,9 +108,9 @@ resource "aws_key_pair" "ssh_key" {
 #  ami           = "ami-08116b9957a259459"
 #  instance_type = "t2.micro"
 #  key_name      = aws_key_pair.ssh_key.key_name
-#  subnet_id     = aws_subnet.subnet.id
+#  subnet_id     = aws_subnet.subnet["subnet1"].id
 #  vpc_security_group_ids = [aws_security_group.instance_sg.id]
-#  user_data     = var.user_data_script
+#  user_data     = data.template_file.user_data_script.rendered
 #
 #  tags = {
 #    Name = "BackendInstance"
@@ -166,12 +166,16 @@ resource "aws_lb_listener" "my_listener" {
   }
 }
 
-resource "aws_launch_template" "my_lt" {
+data "template_file" "user_data_script" {
+  template = file("user_data_script.sh")
+}
+
+resource "aws_launch_configuration" "my_lc" {
   name_prefix          = "my-lt"
   image_id             = "ami-08116b9957a259459"
   instance_type        = "t2.micro"
   key_name             = aws_key_pair.ssh_key.key_name
-  user_data = file("${path.module}/user_data_script.sh")
+  user_data = data.template_file.user_data_script.rendered
   lifecycle {
     create_before_destroy = true
   }
@@ -197,10 +201,7 @@ resource "aws_autoscaling_group" "my_asg" {
   min_size                  = 2
   desired_capacity          = 2
   vpc_zone_identifier       = [for subnet in aws_subnet.subnet : subnet.id]
-  launch_template {
-    id                        = aws_launch_template.my_lt.id
-    version                   = aws_launch_template.my_lt.latest_version
-  }
+  launch_configuration      = aws_launch_configuration.my_lc.name
   health_check_type         = "ELB"
   health_check_grace_period = 300
 

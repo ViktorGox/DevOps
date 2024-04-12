@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Update and install necessary packages
+#Update and install necessary packages
 sudo apt update
 sudo apt install -y docker.io jq
 
@@ -11,7 +11,6 @@ PROJECT_NAME=29
 
 # Get project details
 project_info=$(curl --header "PRIVATE-TOKEN: $ACCESS_TOKEN" "https://gitlab.com/api/v4/projects?search=$PROJECT_NAME")
-echo $project_info
 
 # Parse project namespace and name from the response
 PROJECT_ID=$(echo "$project_info" | jq -r '.[0].id')
@@ -23,10 +22,6 @@ LOGIN_USERNAME=$(curl --header "PRIVATE-TOKEN: $ACCESS_TOKEN" "$GITLAB_URL/api/v
 LOGIN_PASSWORD=$(curl --header "PRIVATE-TOKEN: $ACCESS_TOKEN" "$GITLAB_URL/api/v4/projects/$PROJECT_ID/variables/LOGIN_PASSWORD" | jq -r '.value')
 DATABASE_IP=$(curl --header "PRIVATE-TOKEN: $ACCESS_TOKEN" "$GITLAB_URL/api/v4/projects/$PROJECT_ID/variables/DATABASE_IP" | jq -r '.value')
 
-echo $REGISTRY_URL
-echo $LOGIN_USERNAME
-echo $LOGIN_PASSWORD
-echo $DATABASE_IP
 
 # Execute commands with fetched variables
 echo $LOGIN_PASSWORD | sudo docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com &&
