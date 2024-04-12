@@ -45,9 +45,13 @@ run_terraform:
     - chmod +x adapt.sh
     - echo "$P_ACCESS_KEY"
     - ./adapt.sh $P_ACCESS_KEY
-    - terraform destroy -auto-approve
   cache:
     key: "terraform-cache"
+    paths:
+      - .terraform/
+      - terraform.tfstate
+      - terraform.tfstate.backup
+  artifacts:
     paths:
       - .terraform/
       - terraform.tfstate
