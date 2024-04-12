@@ -45,6 +45,7 @@ run_terraform:
     - chmod +x adapt.sh
     - echo "$P_ACCESS_KEY"
     - ./adapt.sh $P_ACCESS_KEY
+    - echo $(ls)
   cache:
     key: "terraform-cache"
     paths:
