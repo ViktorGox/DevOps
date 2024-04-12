@@ -145,3 +145,7 @@ All the code is done with the help of ChatGPT or self thought. Some look up of t
 ## Assignment 6 - BI-16 CI/CD uploads frontend web files as static website in AWS S3 bucket
 
 Tried a bunch of stuff once again. Found the base image in the gitlab documentation. Had issues with setting the aws credentials, and honestly I am not sure what changed to make it work, but it works.
+
+## Assignment 6 - BI-16 CI/CD uploads frontend web files as static website in AWS S3 bucket
+
+Tried a bunch of stuff once again. Found the base image in the gitlab documentation. Had issues with setting the aws credentials, and honestly I am not sure what changed to make it work, but it works.

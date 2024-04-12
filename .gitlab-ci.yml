@@ -53,7 +53,7 @@ run_terraform:
     paths:
       - $CI_PROJECT_DIR/infra/
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 setup_env_files:
   stage: setup
@@ -65,7 +65,7 @@ setup_env_files:
     - echo "SCHEME=$SCHEME" > dotenv_prod
     - echo "API_URL=$LB_DNS" >> dotenv_prod
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 build_web_frontend_dev:
   stage: frontend
@@ -78,7 +78,7 @@ build_web_frontend_dev:
     paths:
       - frontend/build/web
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 build_web_frontend_prod:
   stage: frontend
@@ -96,7 +96,7 @@ build_web_frontend_prod:
       - frontend/dotenv_prod
       - frontend/build/web
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 build_android_app_dev:
   stage: frontend
@@ -109,7 +109,7 @@ build_android_app_dev:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 build_android_app_prod:
   stage: frontend
@@ -122,7 +122,7 @@ build_android_app_prod:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 test_backend:
   stage: backend
@@ -134,7 +134,7 @@ test_backend:
     paths:
       - backend/build/reports/tests/
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 build_backend:
   stage: backend
@@ -146,7 +146,7 @@ build_backend:
     paths:
       - backend/build/libs/*.jar
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 
 create_docker_images:
@@ -164,7 +164,7 @@ create_docker_images:
         docker push "$image"
       done
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 send_images_to_backend:
   stage: send_images
@@ -196,7 +196,7 @@ send_images_to_backend:
       backend";
       done
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
 
 set_up_bucket:
   stage: send_images
@@ -209,9 +209,9 @@ set_up_bucket:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-    - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://devops-final-assignment-bobby-viktor-v-side-4/ --recursive
+    - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://$BUCKET_NAME/ --recursive
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - launch-template-downloads-backend-image-from-the-start
   cache:
     paths:
       - frontend/build/web
