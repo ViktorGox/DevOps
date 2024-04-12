@@ -300,8 +300,8 @@ output "database_ip" {
   value = aws_db_instance.playlist.address
 }
 
-output "bucket_website_endpoint" {
-  value = aws_s3_bucket_website_configuration.bucket.website_endpoint
+output "bucket_name" {
+  value = aws_s3_bucket_website_configuration.bucket.bucket
 }
 
 output "ssh_private_key" {
