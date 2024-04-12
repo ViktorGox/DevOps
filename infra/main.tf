@@ -249,7 +249,7 @@ resource "aws_db_instance" "playlist" {
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
 resource "aws_s3_bucket" "bucket" {
-  bucket = "devops-final-assignment-bobby-viktor"
+  bucket = "devops-final-assignment-bobby-viktor-bucket-5"
 }
 #
 resource "aws_s3_bucket_website_configuration" "bucket" {
