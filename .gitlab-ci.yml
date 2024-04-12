@@ -45,13 +45,13 @@ run_terraform:
     - chmod +x adapt.sh
     - ./adapt.sh $P_ACCESS_KEY
     - echo $(ls)
-#  cache:
-#    key: "terraform-cache"
-#    paths:
-#      - $CI_PROJECT_DIR/infra/
-  artifacts:
+  cache:
+    key: "terraform-cache"
     paths:
       - $CI_PROJECT_DIR/infra/terraform.tfstate
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/infra/
   only:
     - terraform-is-also-executed-in-the-ci-cd
 
