@@ -42,9 +42,10 @@ run_terraform:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-    - chmod +x adapt.sh
-    - ./adapt.sh $P_ACCESS_KEY
-    - echo $(ls)
+#    - chmod +x adapt.sh
+    - terraform init
+    - terraform destroy
+#    - ./adapt.sh $P_ACCESS_KEY
   cache:
     key: "terraform-cache"
     paths:
@@ -53,7 +54,7 @@ run_terraform:
     paths:
       - $CI_PROJECT_DIR/infra/
   only:
-    - terraform-is-also-executed-in-the-ci-cd
+    - the-database-is-seeded-during-ci-cd-as-well
 
 setup_env_files:
   stage: setup
