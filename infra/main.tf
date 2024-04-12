@@ -75,7 +75,7 @@ resource "aws_subnet" "subnet" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 }
-#
+
 resource "aws_route_table" "route_table" {
   vpc_id = aws_vpc.vpc.id
 
@@ -84,7 +84,6 @@ resource "aws_route_table" "route_table" {
     gateway_id = aws_internet_gateway.igw.id
   }
 }
-
 
 resource "aws_route_table_association" "example" {
   for_each = aws_subnet.subnet
@@ -109,12 +108,25 @@ resource "aws_key_pair" "ssh_key" {
 #  ami           = "ami-08116b9957a259459"
 #  instance_type = "t2.micro"
 #  key_name      = aws_key_pair.ssh_key.key_name
-#  subnet_id     = aws_subnet.subnet.id
+#  subnet_id     = aws_subnet.subnet["subnet1"].id
 #  vpc_security_group_ids = [aws_security_group.instance_sg.id]
-#  user_data     = var.user_data_script
+#  user_data     = data.template_file.user_data_script.rendered
 #
 #  tags = {
 #    Name = "BackendInstance"
+#  }
+#}
+
+#resource "aws_instance" "database" {
+#  ami           = "ami-08116b9957a259459"
+#  instance_type = "t2.micro"
+#  key_name      = aws_key_pair.ssh_key.key_name
+#  subnet_id     = aws_subnet.subnet["subnet1"].id
+#  vpc_security_group_ids = [aws_security_group.instance_sg.id]
+##  user_data = file("${path.module}/user_data_script.sh")
+#
+#  tags = {
+#    Name = "DatabaseInstance"
 #  }
 #}
 
@@ -133,12 +145,12 @@ resource "aws_lb_target_group" "my_target_group" {
   vpc_id   = aws_vpc.vpc.id
 
   health_check {
-    path                = "/"
+    path                = "/api/songs"
     protocol            = "HTTP"
-    interval            = 60
-    timeout             = 30
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
+    interval            = 61
+    timeout             = 60
+    healthy_threshold   = 2
+    unhealthy_threshold = 4
     matcher             = "200-299"
   }
 }
@@ -154,13 +166,17 @@ resource "aws_lb_listener" "my_listener" {
   }
 }
 
+data "template_file" "user_data_script" {
+  template = file("user_data_script.sh")
+}
+
 resource "aws_launch_configuration" "my_lc" {
   name                 = "my-lc"
   image_id             = "ami-08116b9957a259459"
   instance_type        = "t2.micro"
   key_name             = aws_key_pair.ssh_key.key_name
   security_groups      = [aws_security_group.instance_sg.id]
-  user_data            = var.user_data_script
+  user_data = data.template_file.user_data_script.rendered
   lifecycle {
     create_before_destroy = true
   }
@@ -188,7 +204,7 @@ resource "aws_autoscaling_group" "my_asg" {
   vpc_zone_identifier       = [for subnet in aws_subnet.subnet : subnet.id]
   launch_configuration      = aws_launch_configuration.my_lc.name
   health_check_type         = "ELB"
-  health_check_grace_period = 600
+  health_check_grace_period = 300
 
   tag {
     key                 = "FinalAssingment"
@@ -233,7 +249,7 @@ resource "aws_db_instance" "playlist" {
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
 resource "aws_s3_bucket" "bucket" {
-  bucket = "devops-final-assignment-bobby-viktor-v-side-4"
+  bucket = "devops-final-assignment-bobby-viktor"
 }
 #
 resource "aws_s3_bucket_website_configuration" "bucket" {
@@ -284,8 +300,8 @@ output "database_ip" {
   value = aws_db_instance.playlist.address
 }
 
-output "bucket_website_endpoint" {
-  value = aws_s3_bucket_website_configuration.bucket.website_endpoint
+output "bucket_name" {
+  value = aws_s3_bucket_website_configuration.bucket.bucket
 }
 
 output "ssh_private_key" {
