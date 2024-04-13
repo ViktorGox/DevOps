@@ -236,8 +236,8 @@ resource "aws_db_instance" "playlist" {
   engine               = "mariadb"
   engine_version       = "10.11.6"
   instance_class       = "db.t3.micro"
-  username             = "user"
-  password             = "password"
+  username             = var.db_data["username"]
+  password             = var.db_data["password"]
   parameter_group_name = "default.mariadb10.11"
   skip_final_snapshot  = true
 
@@ -315,4 +315,13 @@ output "load_balancer_dns" {
 
 output "rds_endpoint" {
   value = aws_db_instance.playlist.endpoint
+}
+
+output "db_username" {
+  value = aws_db_instance.playlist.username
+}
+
+output "db_password" {
+  value = aws_db_instance.playlist.password
+  sensitive = true
 }

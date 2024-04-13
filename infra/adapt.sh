@@ -24,6 +24,8 @@ terraform apply -auto-approve
 env_vars["DATABASE_IP"]=$(terraform output -json database_ip | jq -r '.')
 env_vars["LB_DNS"]=$(terraform output -json load_balancer_dns | jq -r '.')
 env_vars["BUCKET_NAME"]=$(terraform output -json bucket_name | jq -r '.')
+env_vars["DATABASE_USERNAME"]=$(terraform output -json db_username | jq -r '.')
+env_vars["DATABASE_PASSWORD"]=$(terraform output -json db_password | jq -r '.')
 
 aws_ssh_key=$(terraform output -raw ssh_private_key)
 env_vars["AWS_SSH_KEY"]=$(echo -n "$aws_ssh_key" | base64 | tr -d '\n')

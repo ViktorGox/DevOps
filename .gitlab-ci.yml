@@ -7,9 +7,6 @@ variables:
     - name: mariadb:lts-jammy
       alias: mariadb
   variables:
-    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
-    DATABASE_USERNAME: root
-    DATABASE_PASSWORD: root_password
     DOCKER_ENV: true
 
 .frontend_settings: &frontend_settings
@@ -46,14 +43,14 @@ run_terraform:
     - ./adapt.sh $P_ACCESS_KEY
     - echo $(ls)
   cache:
-    key: "terraform-cache"
+    key: "terraform-cache-2"
     paths:
       - $CI_PROJECT_DIR/infra/terraform.tfstate
   artifacts:
     paths:
       - $CI_PROJECT_DIR/infra/
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 setup_env_files:
   stage: setup
@@ -65,7 +62,7 @@ setup_env_files:
     - echo "SCHEME=$SCHEME" > dotenv_prod
     - echo "API_URL=$LB_DNS" >> dotenv_prod
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 build_web_frontend_dev:
   stage: frontend
@@ -78,7 +75,7 @@ build_web_frontend_dev:
     paths:
       - frontend/build/web
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 build_web_frontend_prod:
   stage: frontend
@@ -96,7 +93,7 @@ build_web_frontend_prod:
       - frontend/dotenv_prod
       - frontend/build/web
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 build_android_app_dev:
   stage: frontend
@@ -109,7 +106,7 @@ build_android_app_dev:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 build_android_app_prod:
   stage: frontend
@@ -122,7 +119,7 @@ build_android_app_prod:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 test_backend:
   stage: backend
@@ -134,7 +131,7 @@ test_backend:
     paths:
       - backend/build/reports/tests/
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 build_backend:
   stage: backend
@@ -146,7 +143,7 @@ build_backend:
     paths:
       - backend/build/libs/*.jar
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 
 create_docker_images:
@@ -164,7 +161,7 @@ create_docker_images:
         docker push "$image"
       done
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 send_images_to_backend:
   stage: send_images
@@ -190,13 +187,13 @@ send_images_to_backend:
       sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest &&
       sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest backend &&
       sudo docker run -d --name backend -p 8080:8080
-      -e DB_USER=user
-      -e DB_PASSWORD=password
+      -e DB_USER=$DATABASE_USERNAME
+      -e DB_PASSWORD=$DATABASE_PASSWORD
       -e DB_HOST=$DATABASE_IP
       backend";
       done
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
 
 set_up_bucket:
   stage: send_images
@@ -211,7 +208,7 @@ set_up_bucket:
     - cd infra
     - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://$BUCKET_NAME/ --recursive
   only:
-    - launch-template-downloads-backend-image-from-the-start
+    - database-created-using-variables
   cache:
     paths:
       - frontend/build/web
