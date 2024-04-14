@@ -39,10 +39,10 @@ run_terraform:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-    - chmod +x adapt.sh
-#    - terraform init
-#    - terraform destroy -auto-approve
-    - ./adapt.sh $P_ACCESS_KEY
+    - terraform init
+    - terraform destroy
+#    - chmod +x adapt.sh
+#    - ./adapt.sh $P_ACCESS_KEY
   cache:
     key: "terraform-cache-440c0291-324c-4a6d-82b3-f52b3101577a"
     paths:
@@ -64,6 +64,8 @@ setup_env_files:
     - echo "API_URL=$LB_DNS" >> dotenv_prod
   only:
     - the-database-is-seeded-during-ci-cd-as-well
+  dependencies:
+    - run_terraform
 
 build_web_frontend_dev:
   stage: frontend
