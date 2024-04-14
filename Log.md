@@ -142,6 +142,21 @@ Tested a bunch of stuff locally to see how it works, used ChatGPT and the offici
 To automate things even more, we thought to create a script which will run the terraform and will update the environment variables inside the CI/CD.
 All the code is done with the help of ChatGPT or self thought. Some look up of the gitlab documentation was done, but it did not help.
 
+## Assignment 5 - BI-20-1 Change SSH key to Base64 and replace hardcoded data in the CI/CD file with the real variables.
+
+Bobby had issues with the SSH key, and was successful with making it read from Base64, so I converted the key received from terraform.
+
+## Assignment 5 - 17
+
+The random generation part was actually easy, but then I ran into problems when running the CI/CD. The aws was giving errors that something exists while it didn't and the opposite. Terraform then didn't generate the auto-scaling group so something failed later.  Got it working at the end though.
+
+## Assignment 5 - 25
+
+I had to do some testing for this one to understand how the cache works. I tried caching the infra folder, but that didn't work, not sure exactly why, since I tried to cache a single testing file and that worked fine. Then I tried caching individual files, but then I ran into a different weird problem, which was that the state was not being updated. Finally, I added the base project directory environment variable, and it worked. Running terraform apply once gives some error, when it is run again, the error is gone. Couldn't figure out how to fix it, so I just call apply twice.
+
+## Assignment 5 - 26
+
+Used Bobby's script, added a check which does a request and checks whether the return is an empty array. Added a stage for it, and didn't realize that exit 1 will cause the ci cd to call fail, so I was confused why it failed with no comment. Reworked the script, but that bug was left in there, I fixed it later for issue 17.
 
 ## Assignment 5 - BI-15 CI/CD uploads the images from the registry to the EC2
 Honestly this task took some time. First of all I had problems with the SSH key we were creating. That's why I created the output for terraform
