@@ -14,3 +14,10 @@ variable "subnets" {
     }
   }
 }
+
+variable "db_data" {
+  default = {
+    username = "user"
+    password = "password"
+  }
+}
