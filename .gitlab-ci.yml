@@ -39,22 +39,15 @@ run_terraform:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-#    - terraform init
-#    - terraform destroy -auto-approve
     - chmod +x adapt.sh
     - ./adapt.sh $P_ACCESS_KEY
   cache:
-    key: "terraform-cache-440c0291-324c-4a6d-82b3-f52b3101577b"
+    key: "terraform-cache-440c0291-32sj-4a6d-82b3-f52b3101577b"
     paths:
       - $CI_PROJECT_DIR/infra/terraform.tfstate
   artifacts:
     paths:
       - $CI_PROJECT_DIR/infra/
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 setup_env_files:
   stage: setup
@@ -65,11 +58,6 @@ setup_env_files:
     - echo "API_URL=$LB_DNS" >> dotenv_dev
     - echo "SCHEME=$SCHEME" > dotenv_prod
     - echo "API_URL=$LB_DNS" >> dotenv_prod
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
   needs:
     - run_terraform
 
@@ -83,11 +71,6 @@ build_web_frontend_dev:
   artifacts:
     paths:
       - frontend/build/web
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 build_web_frontend_prod:
   stage: frontend
@@ -104,11 +87,6 @@ build_web_frontend_prod:
       - frontend/dotenv_dev
       - frontend/dotenv_prod
       - frontend/build/web
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 build_android_app_dev:
   stage: frontend
@@ -120,11 +98,6 @@ build_android_app_dev:
   artifacts:
     paths:
       - frontend/build/app/outputs/flutter-apk
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 build_android_app_prod:
   stage: frontend
@@ -136,11 +109,6 @@ build_android_app_prod:
   artifacts:
     paths:
       - frontend/build/app/outputs/flutter-apk
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 test_backend:
   stage: backend
@@ -151,11 +119,6 @@ test_backend:
   artifacts:
     paths:
       - backend/build/reports/tests/
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 build_backend:
   stage: backend
@@ -166,11 +129,6 @@ build_backend:
   artifacts:
     paths:
       - backend/build/libs/*.jar
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 
 create_docker_images:
@@ -187,11 +145,6 @@ create_docker_images:
       for image in $images; do
         docker push "$image"
       done
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 
 seed_database:
@@ -201,11 +154,6 @@ seed_database:
     - apt-get update && apt-get install -y curl
     - cd seed-application
     - ./add_tracks.sh
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 send_images_to_backend:
   stage: send_images
@@ -236,11 +184,6 @@ send_images_to_backend:
       -e DB_HOST=$DATABASE_IP
       backend";
       done
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 set_up_bucket:
   stage: send_images
@@ -254,11 +197,6 @@ set_up_bucket:
     - cat ~/.aws/credentials
     - cd infra
     - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://$BUCKET_NAME/ --recursive
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-      variables:
-        rule: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
   cache:
     paths:
       - frontend/build/web
