@@ -64,7 +64,7 @@ setup_env_files:
     - echo "API_URL=$LB_DNS" >> dotenv_prod
   only:
     - the-database-is-seeded-during-ci-cd-as-well
-  dependencies:
+  needs:
     - run_terraform
 
 build_web_frontend_dev:
