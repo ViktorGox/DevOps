@@ -247,17 +247,22 @@ resource "aws_db_instance" "playlist" {
 
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
-resource "aws_s3_bucket" "bucket" {
-  bucket = "devops-final-assignment-bobby-viktor-bucket"
+resource "random_string" "bucket_name" {
+  length  = 48
+  special = false
 }
-#
+
+resource "aws_s3_bucket" "bucket" {
+  bucket =  lower(random_string.bucket_name.result)
+}
+
 resource "aws_s3_bucket_website_configuration" "bucket" {
   bucket = aws_s3_bucket.bucket.id
   index_document {
     suffix = "index.html"
   }
 }
-#
+
 resource "aws_s3_bucket_public_access_block" "public_access_block" {
   bucket = aws_s3_bucket.bucket.id
   block_public_acls       = false
@@ -315,4 +320,8 @@ output "db_username" {
 output "db_password" {
   value = aws_db_instance.playlist.password
   sensitive = true
+}
+
+output "bucket_website_endpoint" {
+  value = aws_s3_bucket_website_configuration.bucket.website_endpoint
 }

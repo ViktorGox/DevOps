@@ -39,12 +39,10 @@ run_terraform:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-#    - terraform init
-#    - terraform destroy -auto-approve
     - chmod +x adapt.sh
     - ./adapt.sh $P_ACCESS_KEY
   cache:
-    key: "terraform-cache-440c0291-324c-4a6d-82b3-f52b3101577b"
+    key: "terraform-cache-02020jh1-33nc-4a6d-82b3-f52b3101577b"
     paths:
       - $CI_PROJECT_DIR/infra/terraform.tfstate
   artifacts:
