@@ -17,11 +17,30 @@ resource "aws_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_security_group" "instance_sg" {
-  name        = "instance-sg"
-  description = "Security group for EC2 instances"
+resource "aws_security_group" "lb_sg" {
+  name        = "lb-sg"
+  description = "Security group for the load balancer"
   vpc_id      = aws_vpc.vpc.id
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "instance_sg" {
+  name        = "instance-sg"
+  description = "Security group for the backend"
+  vpc_id      = aws_vpc.vpc.id
   ingress {
     from_port   = 22
     to_port     = 22
@@ -30,24 +49,30 @@ resource "aws_security_group" "instance_sg" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.lb_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group" "db_sg" {
+  name        = "db-sg"
+  description = "Security group for the database"
+  vpc_id      = aws_vpc.vpc.id
 
   ingress {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [aws_security_group.instance_sg.id]
   }
 
   egress {
@@ -104,38 +129,12 @@ resource "aws_key_pair" "ssh_key" {
   public_key = tls_private_key.ssh_key.public_key_openssh
 }
 
-#resource "aws_instance" "backend" {
-#  ami           = "ami-08116b9957a259459"
-#  instance_type = "t2.micro"
-#  key_name      = aws_key_pair.ssh_key.key_name
-#  subnet_id     = aws_subnet.subnet["subnet1"].id
-#  vpc_security_group_ids = [aws_security_group.instance_sg.id]
-#  user_data     = data.template_file.user_data_script.rendered
-#
-#  tags = {
-#    Name = "BackendInstance"
-#  }
-#}
-
-#resource "aws_instance" "database" {
-#  ami           = "ami-08116b9957a259459"
-#  instance_type = "t2.micro"
-#  key_name      = aws_key_pair.ssh_key.key_name
-#  subnet_id     = aws_subnet.subnet["subnet1"].id
-#  vpc_security_group_ids = [aws_security_group.instance_sg.id]
-##  user_data = file("${path.module}/user_data_script.sh")
-#
-#  tags = {
-#    Name = "DatabaseInstance"
-#  }
-#}
-
 resource "aws_lb" "my_alb" {
   name               = "my-alb"
   internal           = false
   load_balancer_type = "application"
   subnets            = [for subnet in aws_subnet.subnet : subnet.id]
-  security_groups = [aws_security_group.instance_sg.id]
+  security_groups = [aws_security_group.lb_sg.id]
 }
 
 resource "aws_lb_target_group" "my_target_group" {
@@ -236,29 +235,34 @@ resource "aws_db_instance" "playlist" {
   engine               = "mariadb"
   engine_version       = "10.11.6"
   instance_class       = "db.t3.micro"
-  username             = "user"
-  password             = "password"
+  username             = var.db_data["username"]
+  password             = var.db_data["password"]
   parameter_group_name = "default.mariadb10.11"
   skip_final_snapshot  = true
 
   db_subnet_group_name = aws_db_subnet_group.default.name
-  vpc_security_group_ids = [aws_security_group.instance_sg.id]
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
 }
 
 
 ### Created with the help of this website
 ### https://dev.to/aws-builders/how-to-create-a-simple-static-amazon-s3-website-using-terraform-43hc
-resource "aws_s3_bucket" "bucket" {
-  bucket = "devops-final-assignment-bobby-viktor"
+resource "random_string" "bucket_name" {
+  length  = 48
+  special = false
 }
-#
+
+resource "aws_s3_bucket" "bucket" {
+  bucket =  lower(random_string.bucket_name.result)
+}
+
 resource "aws_s3_bucket_website_configuration" "bucket" {
   bucket = aws_s3_bucket.bucket.id
   index_document {
     suffix = "index.html"
   }
 }
-#
+
 resource "aws_s3_bucket_public_access_block" "public_access_block" {
   bucket = aws_s3_bucket.bucket.id
   block_public_acls       = false
@@ -266,16 +270,7 @@ resource "aws_s3_bucket_public_access_block" "public_access_block" {
   ignore_public_acls      = false
   restrict_public_buckets = false
 }
-#
-#resource "aws_s3_object" "upload_objects" {
-#  bucket = aws_s3_bucket.bucket.id
-#  for_each = fileset("html/", "**/*")  # Recursive fileset
-#
-#  key    = each.value
-#  source = "html/${each.value}"
-#  etag   = filemd5("html/${each.value}")
-#  content_type  = "text/html"
-#}
+
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.bucket.id
 
@@ -296,6 +291,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   })
 }
 
+### Outputs
 output "database_ip" {
   value = aws_db_instance.playlist.address
 }
@@ -315,4 +311,17 @@ output "load_balancer_dns" {
 
 output "rds_endpoint" {
   value = aws_db_instance.playlist.endpoint
+}
+
+output "db_username" {
+  value = aws_db_instance.playlist.username
+}
+
+output "db_password" {
+  value = aws_db_instance.playlist.password
+  sensitive = true
+}
+
+output "bucket_website_endpoint" {
+  value = aws_s3_bucket_website_configuration.bucket.website_endpoint
 }

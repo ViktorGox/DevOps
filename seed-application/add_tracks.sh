@@ -1,4 +1,4 @@
-BACKEND_ENDPOINT=http://$BACKEND:8080/api/songs
+BACKEND_ENDPOINT=http://$LB_DNS/api/songs
 # Method to actually do the POST request
 parse_and_add_song() {
     local line="$1"
@@ -25,10 +25,16 @@ parse_and_add_song() {
     }' "$BACKEND_ENDPOINT"
 }
 
-# This will read until the last line
-while IFS= read -r line || [[ -n "$line" ]]; do
-    # Exclude lines that start with UNH or UNT
-    if [[ "$line" != UNH* && "$line" != UNT* ]]; then
-        parse_and_add_song "$line"
-    fi
-done < "playlistdata.edi"
+response=$(curl -s "$BACKEND_ENDPOINT")
+# Check if the response contains any elements
+if [[ "$response" == *"[]"* ]]; then
+    # This will read until the last line
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Exclude lines that start with UNH or UNT
+        if [[ "$line" != UNH* && "$line" != UNT* ]]; then
+            parse_and_add_song "$line"
+        fi
+    done < "playlistdata.edi"
+else
+    echo "Database already populated."
+fi
