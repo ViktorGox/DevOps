@@ -149,7 +149,7 @@ resource "aws_lb_target_group" "my_target_group" {
     interval            = 61
     timeout             = 60
     healthy_threshold   = 2
-    unhealthy_threshold = 4
+    unhealthy_threshold = 3
     matcher             = "200-299"
   }
 }
