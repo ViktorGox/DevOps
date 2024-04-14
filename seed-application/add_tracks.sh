@@ -1,4 +1,4 @@
-BACKEND_ENDPOINT=http://my-alb-889682438.us-west-2.elb.amazonaws.com/api/songs
+BACKEND_ENDPOINT=http://$LB_DNS/api/songs
 # Method to actually do the POST request
 parse_and_add_song() {
     local line="$1"
@@ -26,7 +26,6 @@ parse_and_add_song() {
 }
 
 response=$(curl -s "$BACKEND_ENDPOINT")
-echo "$response"
 # Check if the response contains any elements
 if [[ "$response" == *"[]"* ]]; then
     echo "No elements found in the array."
