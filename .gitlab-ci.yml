@@ -7,9 +7,6 @@ variables:
     - name: mariadb:lts-jammy
       alias: mariadb
   variables:
-    DATABASE_URL: jdbc:mariadb://mariadb:3306/playlist
-    DATABASE_USERNAME: root
-    DATABASE_PASSWORD: root_password
     DOCKER_ENV: true
 
 .frontend_settings: &frontend_settings
@@ -202,8 +199,8 @@ send_images_to_backend:
       sudo docker pull registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest &&
       sudo docker tag registry.gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/backend:latest backend &&
       sudo docker run -d --name backend -p 8080:8080
-      -e DB_USER=user
-      -e DB_PASSWORD=password
+      -e DB_USER=$DATABASE_USERNAME
+      -e DB_PASSWORD=$DATABASE_PASSWORD
       -e DB_HOST=$DATABASE_IP
       backend";
       done
@@ -221,7 +218,7 @@ set_up_bucket:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
-    - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://devops-final-assignment-bobby-viktor-v-side-4/ --recursive
+    - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://$BUCKET_NAME/ --recursive
   only:
     - the-database-is-seeded-during-ci-cd-as-well
   cache:
