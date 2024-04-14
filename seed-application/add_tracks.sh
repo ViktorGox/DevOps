@@ -28,16 +28,13 @@ parse_and_add_song() {
 response=$(curl -s "$BACKEND_ENDPOINT")
 # Check if the response contains any elements
 if [[ "$response" == *"[]"* ]]; then
-    echo "No elements found in the array."
+    # This will read until the last line
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Exclude lines that start with UNH or UNT
+        if [[ "$line" != UNH* && "$line" != UNT* ]]; then
+            parse_and_add_song "$line"
+        fi
+    done < "playlistdata.edi"
 else
     echo "Database already populated."
-    exit 1
 fi
-
-# This will read until the last line
-while IFS= read -r line || [[ -n "$line" ]]; do
-    # Exclude lines that start with UNH or UNT
-    if [[ "$line" != UNH* && "$line" != UNT* ]]; then
-        parse_and_add_song "$line"
-    fi
-done < "playlistdata.edi"
