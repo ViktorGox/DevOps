@@ -20,7 +20,7 @@ stages:
   - setup
   - frontend
   - backend
-  - build_images
+  - aws_population
   - send_images
 
 run_terraform:
@@ -39,18 +39,19 @@ run_terraform:
     - echo "aws_session_token=$MY_AWS_SESSION_TOKEN" >> ~/.aws/credentials
     - cat ~/.aws/credentials
     - cd infra
+#    - terraform init
+#    - terraform destroy -auto-approve
     - chmod +x adapt.sh
     - ./adapt.sh $P_ACCESS_KEY
-    - echo $(ls)
   cache:
-    key: "terraform-cache-2"
+    key: "terraform-cache-440c0291-324c-4a6d-82b3-f52b3101577a"
     paths:
       - $CI_PROJECT_DIR/infra/terraform.tfstate
   artifacts:
     paths:
       - $CI_PROJECT_DIR/infra/
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 setup_env_files:
   stage: setup
@@ -62,7 +63,9 @@ setup_env_files:
     - echo "SCHEME=$SCHEME" > dotenv_prod
     - echo "API_URL=$LB_DNS" >> dotenv_prod
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
+  needs:
+    - run_terraform
 
 build_web_frontend_dev:
   stage: frontend
@@ -75,7 +78,7 @@ build_web_frontend_dev:
     paths:
       - frontend/build/web
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 build_web_frontend_prod:
   stage: frontend
@@ -93,7 +96,7 @@ build_web_frontend_prod:
       - frontend/dotenv_prod
       - frontend/build/web
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 build_android_app_dev:
   stage: frontend
@@ -106,7 +109,7 @@ build_android_app_dev:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 build_android_app_prod:
   stage: frontend
@@ -119,7 +122,7 @@ build_android_app_prod:
     paths:
       - frontend/build/app/outputs/flutter-apk
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 test_backend:
   stage: backend
@@ -131,7 +134,7 @@ test_backend:
     paths:
       - backend/build/reports/tests/
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 build_backend:
   stage: backend
@@ -143,14 +146,14 @@ build_backend:
     paths:
       - backend/build/libs/*.jar
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 
 create_docker_images:
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
-  stage: build_images
+  stage: aws_population
   script:
     - echo $LOGIN_PASSWORD | docker login -u $LOGIN_USERNAME --password-stdin registry.gitlab.com
     - docker-compose build
@@ -161,7 +164,18 @@ create_docker_images:
         docker push "$image"
       done
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
+
+
+seed_database:
+  image: ubuntu:latest
+  stage: aws_population
+  script:
+    - apt-get update && apt-get install -y curl
+    - cd seed-application
+    - ./add_tracks.sh
+  only:
+    - the-database-is-seeded-during-ci-cd-as-well
 
 send_images_to_backend:
   stage: send_images
@@ -193,7 +207,7 @@ send_images_to_backend:
       backend";
       done
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
 
 set_up_bucket:
   stage: send_images
@@ -208,7 +222,7 @@ set_up_bucket:
     - cd infra
     - aws s3 cp $CI_PROJECT_DIR/frontend/build/web s3://$BUCKET_NAME/ --recursive
   only:
-    - database-created-using-variables
+    - the-database-is-seeded-during-ci-cd-as-well
   cache:
     paths:
       - frontend/build/web
