@@ -38,6 +38,9 @@ resource "aws_security_group" "lb_sg" {
 }
 
 resource "aws_security_group" "instance_sg" {
+  name        = "instance-sg"
+  description = "Security group for the backend"
+  vpc_id      = aws_vpc.vpc.id
   ingress {
     from_port   = 22
     to_port     = 22
