@@ -42,7 +42,7 @@ run_terraform:
     - chmod +x adapt.sh
     - ./adapt.sh $P_ACCESS_KEY
   cache:
-    key: "terraform-cache---20201-3323a4a6d-82b3-f52b3101577b"
+    key: "terraform-cache-l20201-33200-a6d-82b3-f52b3101577b"
     paths:
       - $CI_PROJECT_DIR/infra/terraform.tfstate
   artifacts:
